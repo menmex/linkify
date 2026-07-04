@@ -47,23 +47,24 @@
     async function updateAuthUI() {
         const isLoggedIn = await checkAuth();
     }
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f5f3ff', 100: '#ede9fe', 200: '#ddd6fe', 300: '#c4b5fd',
-                            400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9',
-                            800: '#5b21b6', 900: '#4c1d95',
-                        }
-                    },
-                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
-                }
+    
+    tailwind.config = {
+        darkMode: 'class',
+        theme: {
+            extend: {
+                colors: {
+                    primary: {
+                        50: '#f5f3ff', 100: '#ede9fe', 200: '#ddd6fe', 300: '#c4b5fd',
+                        400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9',
+                        800: '#5b21b6', 900: '#4c1d95',
+                    }
+                },
+                fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
             }
         }
+    }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
         ::-webkit-scrollbar { width: 8px; }
@@ -117,7 +118,7 @@
                 <span class="text-2xl font-bold text-gray-900 dark:text-white">Linkify</span>
             </div>
             <div class="flex items-center space-x-4">
-                <button onclick="openThemeModal()" class="flex items-center space-x-2 px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                <button onclick="toggleTheme()" class="flex items-center space-x-2 px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                     <i id="theme-icon" class="fas fa-sun text-gray-600 dark:text-gray-400"></i>
                     <span id="theme-text" class="text-sm font-medium text-gray-700 dark:text-gray-300">Light</span>
                 </button>
@@ -302,7 +303,7 @@
     </div>
 </section>
 
-<!-- Platform Architecture Section -->
+<!-- ==================== PLATFORM ARCHITECTURE SECTION ==================== -->
 <section id="data-structure" class="py-20 px-4 bg-gradient-to-b from-gray-100 to-white dark:from-gray-800/50 dark:to-gray-900">
     <div class="max-w-7xl mx-auto">
         <div class="text-center mb-16 reveal">
@@ -409,7 +410,7 @@
                         </div>
                         <i class="fas fa-chevron-down transition-transform" id="icon-profile-info"></i>
                     </button>
-                    <div id="profile-info" class="collapsible-content">
+                    <div id="profile-info" class="collapsible-content text-left">
                         <div class="px-6 pb-6 space-y-3">
                             <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><span class="font-medium text-sm">Display Name</span><span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full float-right">string</span></div>
                             <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
@@ -435,16 +436,16 @@
                     </button>
                     <div id="academic-info" class="collapsible-content">
                         <div class="px-6 pb-6 space-y-3">
-                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-left">
                                 <span class="font-medium text-sm">Academic Status</span><span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full float-right">enum</span>
                                 <p class="text-xs text-gray-500 mt-2">In School | Graduate | Not in School</p>
                             </div>
-                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><span class="font-medium text-sm">Institution Name</span><span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full float-right">string</span></div>
-                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-left"><span class="font-medium text-sm">Institution Name</span><span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full float-right">string</span></div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-left">
                                 <span class="font-medium text-sm">Academic Level</span><span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full float-right">18 options</span>
                                 <div class="text-xs text-gray-500 mt-2 grid grid-cols-2 gap-1"><span>JSS1-3</span><span>SS1-3</span><span>ND1-2</span><span>HND1-2</span><span>100-600 Level</span><span>Postgraduate</span></div>
                             </div>
-                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><span class="font-medium text-sm">Faculty / Department</span><span class="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 px-2 py-1 rounded-full float-right">optional</span></div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-left"><span class="font-medium text-sm">Faculty / Department</span><span class="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 px-2 py-1 rounded-full float-right">optional</span></div>
                         </div>
                     </div>
                 </div>
@@ -460,7 +461,7 @@
                     </button>
                     <div id="match-prefs" class="collapsible-content">
                         <div class="px-6 pb-6 space-y-3">
-                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-left">
                                 <span class="font-medium text-sm">Looking For</span><span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full float-right">multi-select</span>
                                 <div class="flex flex-wrap gap-1 mt-2">
                                     <span class="text-xs bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 px-2 py-1 rounded-full">Friendship</span>
@@ -471,13 +472,13 @@
                                     <span class="text-xs bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 px-2 py-1 rounded-full">Random</span>
                                 </div>
                             </div>
-                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><span class="font-medium text-sm">Preferred Age Range</span><span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full float-right">enum</span></div>
-                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><span class="font-medium text-sm">Preferred Gender</span><span class="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 px-2 py-1 rounded-full float-right">optional</span></div>
-                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-left"><span class="font-medium text-sm">Preferred Age Range</span><span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full float-right">enum</span></div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-left"><span class="font-medium text-sm">Preferred Gender</span><span class="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 px-2 py-1 rounded-full float-right">optional</span></div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-left">
                                 <span class="font-medium text-sm">Preferred Location</span><span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full float-right">enum</span>
                                 <p class="text-xs text-gray-500 mt-1">Same Country | Same Region | Global</p>
                             </div>
-                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-left">
                                 <span class="font-medium text-sm">Academic Filters</span><span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full float-right">multi-select</span>
                                 <div class="flex flex-wrap gap-1 mt-2">
                                     <span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full">Same Institution</span>
@@ -503,7 +504,7 @@
                         <i class="fas fa-chevron-down transition-transform" id="icon-interests-data"></i>
                     </button>
                     <div id="interests-data" class="collapsible-content">
-                        <div class="px-6 pb-6 space-y-4">
+                        <div class="px-6 pb-6 space-y-4 text-left">
                             <div>
                                 <h4 class="text-sm font-semibold text-primary-600 mb-2"><i class="fas fa-film mr-2"></i>Entertainment</h4>
                                 <div class="flex flex-wrap gap-2">
@@ -563,7 +564,7 @@
                         <i class="fas fa-chevron-down transition-transform" id="icon-personality-data"></i>
                     </button>
                     <div id="personality-data" class="collapsible-content">
-                        <div class="px-6 pb-6 space-y-4">
+                        <div class="px-6 pb-6 space-y-4 text-left">
                             <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
                                 <div class="flex justify-between text-sm mb-2"><span class="font-medium">Introvert</span><span class="font-medium">Extrovert</span></div>
                                 <div class="h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-400 to-primary-600 rounded-full" style="width:60%"></div></div>
@@ -596,7 +597,7 @@
 
         <!-- Tab Content: Matching Engine -->
         <div id="arch-matching" class="arch-content hidden">
-            <div class="grid lg:grid-cols-2 gap-8">
+            <div class="grid lg:grid-cols-2 gap-8 text-left">
                 <!-- Anonymous Chat Features -->
                 <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 reveal">
                     <div class="flex items-center space-x-3 mb-6">
@@ -634,15 +635,15 @@
                         <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center"><i class="fas fa-comments text-primary-600 text-xl"></i></div>
                         <div><h3 class="text-xl font-bold">10. Chat Features</h3><p class="text-sm text-gray-500">Rich messaging experience</p></div>
                     </div>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-comment-dots text-primary-500 text-2xl mb-2"></i><p class="text-sm font-medium">One-to-One</p></div>
-                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-handshake text-primary-500 text-2xl mb-2"></i><p class="text-sm font-medium">Match Requests</p></div>
-                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-circle text-green-500 text-2xl mb-2"></i><p class="text-sm font-medium">Online Status</p></div>
-                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-keyboard text-primary-500 text-2xl mb-2"></i><p class="text-sm font-medium">Typing Indicator</p></div>
-                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-check-double text-blue-500 text-2xl mb-2"></i><p class="text-sm font-medium">Read Receipts</p></div>
-                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-image text-purple-500 text-2xl mb-2"></i><p class="text-sm font-medium">Media Sharing</p></div>
-                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-microphone text-red-500 text-2xl mb-2"></i><p class="text-sm font-medium">Voice Notes</p></div>
-                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-history text-orange-500 text-2xl mb-2"></i><p class="text-sm font-medium">Match History</p></div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-comment-dots text-primary-500 text-2xl mb-2"></i><p class="text-sm font-medium">One-to-One</p></div>
+                        <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-handshake text-primary-500 text-2xl mb-2"></i><p class="text-sm font-medium">Match Requests</p></div>
+                        <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-circle text-green-500 text-2xl mb-2"></i><p class="text-sm font-medium">Online Status</p></div>
+                        <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-keyboard text-primary-500 text-2xl mb-2"></i><p class="text-sm font-medium">Typing Indicator</p></div>
+                        <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-check-double text-blue-500 text-2xl mb-2"></i><p class="text-sm font-medium">Read Receipts</p></div>
+                        <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-image text-purple-500 text-2xl mb-2"></i><p class="text-sm font-medium">Media Sharing</p></div>
+                        <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-microphone text-red-500 text-2xl mb-2"></i><p class="text-sm font-medium">Voice Notes</p></div>
+                        <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-history text-orange-500 text-2xl mb-2"></i><p class="text-sm font-medium">Match History</p></div>
                     </div>
                 </div>
             </div>
@@ -659,7 +660,7 @@
                     <p class="text-gray-600 dark:text-gray-400 mt-2">Maximum possible score: <span class="font-bold text-primary-600">100 points</span></p>
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="grid md:grid-cols-2 gap-6 mb-8 text-left">
                     <!-- Interest Match -->
                     <div class="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-6">
                         <div class="flex items-center justify-between mb-3">
@@ -766,7 +767,7 @@
                 <p class="text-primary-600 font-semibold text-sm tracking-widest uppercase mb-3">11. Database Collections</p>
                 <h3 class="text-2xl font-bold">MongoDB Schema Design</h3>
             </div>
-            <div class="grid lg:grid-cols-2 gap-6">
+            <div class="grid lg:grid-cols-2 gap-6 text-left">
                 <!-- Users Collection -->
                 <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden reveal">
                     <div class="px-6 py-4 bg-primary-50 dark:bg-primary-900/20 border-b border-primary-100 dark:border-primary-800">
@@ -852,7 +853,7 @@
     </div>
 </section>
 
-<!-- Match Simulator Section -->
+<!-- ==================== MATCH SIMULATOR SECTION ==================== -->
 <section id="match-simulator" class="py-20 px-4 bg-gray-100 dark:bg-gray-800/50">
     <div class="max-w-6xl mx-auto">
         <div class="text-center mb-16 reveal">
@@ -861,7 +862,7 @@
             <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">Configure two user profiles and see how Linkify's algorithm calculates compatibility in real-time.</p>
         </div>
 
-        <div class="grid lg:grid-cols-2 gap-8 mb-12">
+        <div class="grid lg:grid-cols-2 gap-8 mb-12 text-left">
             <!-- User A Profile -->
             <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 border border-gray-200 dark:border-gray-700 reveal">
                 <div class="flex items-center space-x-3 mb-6">
@@ -990,7 +991,7 @@
             </div>
 
             <!-- Score Breakdown -->
-            <div class="space-y-4 max-w-2xl mx-auto">
+            <div class="space-y-4 max-w-2xl mx-auto text-left">
                 <div>
                     <div class="flex justify-between text-sm mb-1"><span>Interest Match</span><span id="score-interest">20 pts</span></div>
                     <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden"><div id="bar-interest" class="h-full bg-primary-500 rounded-full match-score-bar" style="width:50%"></div></div>
@@ -1045,7 +1046,7 @@
 <!-- Footer -->
 <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 pt-16 pb-8 px-4">
     <div class="max-w-7xl mx-auto">
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12 text-left">
             <div class="lg:col-span-1">
                 <div class="flex items-center space-x-2 mb-4">
                     <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center"><i class="fas fa-link text-white text-lg"></i></div>
@@ -1100,73 +1101,142 @@
             <button onclick="closeSignupModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"><i class="fas fa-times text-xl"></i></button>
             <h2 class="text-2xl font-bold mb-1">Join Linkify</h2>
             <p class="text-gray-600 dark:text-gray-400 mb-6">Start connecting anonymously today.</p>
-            <form onsubmit="handleSignup(event)" class="space-y-4">
+            <form onsubmit="handleSignup(event)" class="space-y-4 text-left">
                 <div><label class="block text-sm font-medium mb-2">Email</label><input type="email" id="signup-email" placeholder="you@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
                 <div><label class="block text-sm font-medium mb-2">Username</label><input type="text" id="signup-username" placeholder="Choose a username" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
                 <div><label class="block text-sm font-medium mb-2">Password</label><input type="password" id="signup-password" placeholder="Create a password" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
-                <div><label class="block text-sm font-medium mb-2">Confirm Password</label><input type="password" id="signup-confirm" placeholder="Confirm your password" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
-                <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl font-semibold transition-all hover:shadow-lg hover:shadow-primary-500/30 btn-shine flex items-center justify-center space-x-2"><span>Create Account</span><i class="fas fa-arrow-right"></i></button>
+                <div><label class="block text-sm font-medium mb-2">Confirm Password</label><input type="password" id="signup-confirm-password" placeholder="Confirm your password" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
+                <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl font-semibold transition-all hover:shadow-lg">Sign Up</button>
             </form>
-            <p class="text-center mt-4 text-gray-600 dark:text-gray-400">Already have an account? <button onclick="switchToLogin()" class="text-primary-600 font-medium hover:underline">Log In</button></p>
         </div>
     </div>
 </div>
 
-<!-- Log In Modal -->
-<div id="login-modal" class="fixed inset-0 z-[60] hidden">
-    <div class="modal-overlay absolute inset-0" onclick="closeLoginModal()"></div>
-    <div class="absolute inset-0 flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 w-full max-w-md shadow-2xl relative" style="animation: fadeIn 0.4s ease-out">
-            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"><i class="fas fa-times text-xl"></i></button>
-            <h2 class="text-2xl font-bold mb-1">Welcome Back</h2>
-            <p class="text-gray-600 dark:text-gray-400 mb-6">Log in to continue your journey.</p>
-            <form onsubmit="handleLogin(event)" class="space-y-4">
-                <div><label class="block text-sm font-medium mb-2">Email</label><input type="email" id="login-email" placeholder="you@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
-                <div><label class="block text-sm font-medium mb-2">Password</label><input type="password" id="login-password" placeholder="Enter your password" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
-                <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl font-semibold transition-all hover:shadow-lg hover:shadow-primary-500/30 btn-shine flex items-center justify-center space-x-2"><span>Log In</span><i class="fas fa-arrow-right"></i></button>
-            </form>
-            <p class="text-center mt-4 text-gray-600 dark:text-gray-400">Don't have an account? <button onclick="switchToSignup()" class="text-primary-600 font-medium hover:underline">Sign Up</button></p>
-        </div>
-    </div>
-</div>
-
-<!-- Core System Scripts -->
+<!-- Essential Frontend UI Logic scripts -->
 <script>
-    // Navigation and Menu Utilities
-    function toggleMobileMenu() {
-        const menu = document.getElementById('mobile-menu');
-        menu.classList.toggle('hidden');
+    // Theme Switcher Logic
+    function toggleTheme() {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        document.getElementById('theme-icon').className = isDark ? 'fas fa-moon text-primary-400' : 'fas fa-sun text-gray-600 dark:text-gray-400';
+        document.getElementById('theme-text').innerText = isDark ? 'Dark' : 'Light';
+    }
+    
+    // Apply theme on initial load
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('theme-icon').className = 'fas fa-moon text-primary-400';
+        document.getElementById('theme-text').innerText = 'Dark';
     }
 
-    // Modal Control Functions
-    function openSignupModal() {
-        document.getElementById('signup-modal').classList.remove('hidden');
-    }
-    function closeSignupModal() {
-        document.getElementById('signup-modal').classList.add('hidden');
-    }
-    function openLoginModal() {
-        document.getElementById('login-modal').classList.remove('hidden');
-    }
-    function closeLoginModal() {
-        document.getElementById('login-modal').classList.add('hidden');
-    }
-    function switchToLogin() {
-        closeSignupModal();
-        openLoginModal();
-    }
-    function switchToSignup() {
-        closeLoginModal();
-        openSignupModal();
+    // Modal Control
+    function openSignupModal() { document.getElementById('signup-modal').classList.remove('hidden'); }
+    function closeSignupModal() { document.getElementById('signup-modal').classList.add('hidden'); }
+
+    // Mobile Menu
+    function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
+
+    // Platform Architecture Tab Navigation
+    function showArchTab(tabId) {
+        document.querySelectorAll('.arch-content').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`arch-${tabId}`).classList.remove('hidden');
+        document.getElementById(`tab-${tabId}`).classList.add('active');
     }
 
-    // Backend Form Submissions Integration
-    async function handleSignup(e) {
-        e.preventDefault();
+    // Accordions
+    function toggleCollapse(id) {
+        const content = document.getElementById(id);
+        const icon = document.getElementById(`icon-${id}`);
+        content.classList.toggle('open');
+        icon.classList.toggle('rotate-180');
+    }
+
+    // Simulator Interactive Chips
+    function toggleInterest(el, userPrefix) {
+        el.classList.toggle('selected');
+        calculateMatch();
+    }
+
+    // Matchmaking Real-Time Calculation Algorithm Engine
+    function calculateMatch() {
+        let score = 0;
+
+        // 1. Age Range match: +20 points
+        const ageA = document.getElementById('userA-age').value;
+        const ageB = document.getElementById('userB-age').value;
+        const ageScore = (ageA === ageB) ? 20 : 0;
+        score += ageScore;
+
+        // 2. Country / Location match: +10 points
+        const countryA = document.getElementById('userA-country').value;
+        const countryB = document.getElementById('userB-country').value;
+        const countryScore = (countryA === countryB) ? 10 : 0;
+        score += countryScore;
+
+        // 3. Preferred Language match: +20 points
+        const langA = document.getElementById('userA-lang').value;
+        const langB = document.getElementById('userB-lang').value;
+        const langScore = (langA === langB) ? 20 : 0;
+        score += langScore;
+
+        // 4. Academic level bonus match: Max +25 points
+        const levelA = document.getElementById('userA-level').value;
+        const levelB = document.getElementById('userB-level').value;
+        const levelScore = (levelA === levelB) ? 25 : 0;
+        score += levelScore;
+
+        // 5. Shared Interest match strings: +10 points each (max 25 to clip nicely at 100 max)
+        const selectedA = Array.from(document.querySelectorAll('#userA-interests .interest-chip.selected')).map(el => el.innerText);
+        const selectedB = Array.from(document.querySelectorAll('#userB-interests .interest-chip.selected')).map(el => el.innerText);
+        const shared = selectedA.filter(interest => selectedB.includes(interest));
+        const interestScore = Math.min(shared.length * 10, 25); 
+        score += interestScore;
+
+        // Absolute boundaries cleanup
+        const completeFinalScore = Math.min(score, 100);
+
+        // Update UI View Elements
+        document.getElementById('match-percentage').innerText = `${completeFinalScore}%`;
+        document.getElementById('score-interest').innerText = `${interestScore} pts`;
+        document.getElementById('bar-interest').style.width = `${(interestScore/25)*100}%`;
+        document.getElementById('score-age').innerText = `${ageScore} pts`;
+        document.getElementById('bar-age').style.width = `${(ageScore/20)*100}%`;
+        document.getElementById('score-lang').innerText = `${langScore} pts`;
+        document.getElementById('bar-lang').style.width = `${(langScore/20)*100}%`;
+        document.getElementById('score-location').innerText = `${countryScore} pts`;
+        document.getElementById('bar-location').style.width = `${(countryScore/10)*100}%`;
+        document.getElementById('score-academic').innerText = `${levelScore} pts`;
+        document.getElementById('bar-academic').style.width = `${(levelScore/25)*100}%`;
+
+        // Range Labelings
+        const label = document.getElementById('match-label');
+        const cardBox = document.getElementById('match-recommendation');
+        if(completeFinalScore <= 40) {
+            label.innerText = "Low Match";
+            label.className = "text-sm font-medium text-red-600";
+            cardBox.className = "mt-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-center text-red-800 dark:text-red-300";
+            cardBox.innerHTML = `<i class="fas fa-heart-broken mb-2"></i><p>Few shared items or incompatible preferences. Might be a tough conversation.</p>`;
+        } else if (completeFinalScore <= 70) {
+            label.innerText = "Moderate Match";
+            label.className = "text-sm font-medium text-yellow-600";
+            cardBox.className = "mt-8 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl text-center text-yellow-800 dark:text-yellow-300";
+            cardBox.innerHTML = `<i class="fas fa-info-circle mb-2"></i><p>Some common ground worth exploring. Try starting a conversation about your shared interests!</p>`;
+        } else {
+            label.innerText = "High Match";
+            label.className = "text-sm font-medium text-green-600";
+            cardBox.className = "mt-8 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl text-center text-green-800 dark:text-green-300";
+            cardBox.innerHTML = `<i class="fas fa-fire mb-2"></i><p>Strong compatibility — excellent relationship potential! Reach out and secure a chat now.</p>`;
+        }
+    }
+
+    // Render Live Platform API Sign-Up Implementation Integration
+    async function handleSignup(event) {
+        event.preventDefault();
         const email = document.getElementById('signup-email').value;
         const username = document.getElementById('signup-username').value;
         const password = document.getElementById('signup-password').value;
-        const confirmPassword = document.getElementById('signup-confirm').value;
+        const confirmPassword = document.getElementById('signup-confirm-password').value;
 
         if (password !== confirmPassword) {
             alert("Passwords do not match!");
@@ -1178,170 +1248,27 @@
                 method: 'POST',
                 body: { email, username, password }
             });
-            if(data.token) {
+            if (data.token) {
                 localStorage.setItem('authToken', data.token);
                 authToken = data.token;
-                alert('Registration successful!');
+                alert("Account created successfully!");
                 closeSignupModal();
                 updateAuthUI();
             }
         } catch (error) {
-            alert('Signup Error: ' + error.message);
+            alert(`Sign up failed: ${error.message}`);
         }
     }
 
-    async function handleLogin(e) {
-        e.preventDefault();
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-
-        try {
-            const data = await apiRequest('/auth/login', {
-                method: 'POST',
-                body: { email, password }
-            });
-            if(data.token) {
-                localStorage.setItem('authToken', data.token);
-                authToken = data.token;
-                alert('Logged in successfully!');
-                closeLoginModal();
-                updateAuthUI();
-            }
-        } catch (error) {
-            alert('Login Error: ' + error.message);
-        }
-    }
-
-    // Theme Switcher Control (Dark / Light Mode Toggle)
-    function openThemeModal() {
-        const html = document.documentElement;
-        const icon = document.getElementById('theme-icon');
-        const text = document.getElementById('theme-text');
-        
-        if (html.classList.contains('dark')) {
-            html.classList.remove('dark');
-            icon.className = 'fas fa-sun text-gray-600';
-            text.innerText = 'Light';
-        } else {
-            html.classList.add('dark');
-            icon.className = 'fas fa-moon text-primary-400';
-            text.innerText = 'Dark';
-        }
-    }
-
-    // Platform Architecture Tab Switcher
-    function showArchTab(tabName) {
-        document.querySelectorAll('.arch-content').forEach(el => el.classList.add('hidden'));
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        
-        document.getElementById(`arch-${tabName}`).classList.remove('hidden');
-        document.getElementById(`tab-${tabName}`).classList.add('active');
-    }
-
-    // Accordion / Collapse UI Toggler
-    function toggleCollapse(id) {
-        const content = document.getElementById(id);
-        const icon = document.getElementById(`icon-${id}`);
-        content.classList.toggle('open');
-        if(content.classList.contains('open')) {
-            icon.style.transform = 'rotate(0deg)';
-        } else {
-            icon.style.transform = 'rotate(-90deg)';
-        }
-    }
-
-    // Interactive Demo Matchmaking Simulator Logic Engine
-    function toggleInterest(element, userGroup) {
-        element.classList.toggle('selected');
-        calculateMatch();
-    }
-
-    function calculateMatch() {
-        let score = 0;
-
-        // 1. Age Rule Engine (+20 pts max)
-        const ageA = document.getElementById('userA-age').value;
-        const ageB = document.getElementById('userB-age').value;
-        let scoreAge = (ageA === ageB) ? 20 : 0;
-        score += scoreAge;
-
-        // 2. Language Rule Engine (+20 pts max)
-        const langA = document.getElementById('userA-lang').value;
-        const langB = document.getElementById('userB-lang').value;
-        let scoreLang = (langA === langB) ? 20 : 0;
-        score += scoreLang;
-
-        // 3. Location Rule Engine (+10 pts max)
-        const countryA = document.getElementById('userA-country').value;
-        const countryB = document.getElementById('userB-country').value;
-        let scoreLocation = (countryA === countryB) ? 10 : 0;
-        score += scoreLocation;
-
-        // 4. Academic Level Rule Engine (+15 bonus pts up to 25 absolute max capacity)
-        const levelA = document.getElementById('userA-level').value;
-        const levelB = document.getElementById('userB-level').value;
-        let scoreAcademic = (levelA === levelB) ? 25 : 5;
-        score += scoreAcademic;
-
-        // 5. Shared Multi-Interests Intersection Calculator Engine (+10 pts each up to 40 max)
-        const interestsA = Array.from(document.querySelectorAll('#userA-interests .interest-chip.selected')).map(el => el.innerText);
-        const interestsB = Array.from(document.querySelectorAll('#userB-interests .interest-chip.selected')).map(el => el.innerText);
-        const sharedInterests = interestsA.filter(interest => interestsB.includes(interest));
-        let scoreInterest = Math.min(sharedInterests.length * 10, 40);
-        score += scoreInterest;
-
-        // Clamp standard logic to peak dynamic limits
-        if (score > 100) score = 100;
-
-        // Render Dynamic Statistics to HTML DOM Nodes
-        document.getElementById('match-percentage').innerText = `${score}%`;
-        document.getElementById('score-interest').innerText = `${scoreInterest} pts`;
-        document.getElementById('bar-interest').style.width = `${(scoreInterest/40)*100}%`;
-        document.getElementById('score-age').innerText = `${scoreAge} pts`;
-        document.getElementById('bar-age').style.width = `${(scoreAge/20)*100}%`;
-        document.getElementById('score-lang').innerText = `${scoreLang} pts`;
-        document.getElementById('bar-lang').style.width = `${(scoreLang/20)*100}%`;
-        document.getElementById('score-location').innerText = `${scoreLocation} pts`;
-        document.getElementById('bar-location').style.width = `${(scoreLocation/10)*100}%`;
-        document.getElementById('score-academic').innerText = `${scoreAcademic} pts`;
-        document.getElementById('bar-academic').style.width = `${(scoreAcademic/25)*100}%`;
-
-        // Update Global Recommendations
-        const labelEl = document.getElementById('match-label');
-        const recEl = document.getElementById('match-recommendation');
-        if(score <= 40) {
-            labelEl.innerText = "Low Match";
-            labelEl.className = "text-sm font-medium text-red-600";
-            recEl.className = "mt-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-center text-red-800 dark:text-red-300";
-            recEl.innerHTML = '<i class="fas fa-exclamation-triangle mb-2"></i><p>Few shared fields found. Try adapting interest arrays to check alignment values.</p>';
-        } else if(score <= 70) {
-            labelEl.innerText = "Moderate Match";
-            labelEl.className = "text-sm font-medium text-yellow-600";
-            recEl.className = "mt-8 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl text-center text-yellow-800 dark:text-yellow-300";
-            recEl.innerHTML = '<i class="fas fa-info-circle mb-2"></i><p>Some common ground worth exploring. Try starting a conversation about your shared interests!</p>';
-        } else {
-            labelEl.innerText = "High Match";
-            labelEl.className = "text-sm font-medium text-green-600";
-            recEl.className = "mt-8 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl text-center text-green-800 dark:text-green-300";
-            recEl.innerHTML = '<i class="fas fa-fire mb-2"></i><p>Strong compatibility matrix matched! Phenomenal link connection possibilities here.</p>';
-        }
-    }
-
-    // Scroll Animation Reveals
+    // Scroll Animations Reveal Engine Setup Initialization
     window.addEventListener('scroll', () => {
         document.querySelectorAll('.reveal').forEach(el => {
-            const windowHeight = window.innerHeight;
-            const elementTop = el.getBoundingClientRect().top;
-            if (elementTop < windowHeight - 50) {
-                el.classList.add('active');
-            }
+            if(el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add('active');
         });
     });
-
-    // Initialize logic properties automatically on window ready load state
-    window.onload = () => {
-        calculateMatch();
-    };
+    
+    // Initial run on mount load
+    calculateMatch();
 </script>
 </body>
 </html>
