@@ -1,1 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linkify - Connect Anonymously. Meet Authentically.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+    // API Configuration
+    const API_BASE_URL = 'https://linkify-backend-k44c.onrender.com/api';
+    let authToken = localStorage.getItem('authToken') || null;
+    let currentUser = null;
 
+    // Helper: Make API requests
+    async function apiRequest(endpoint, options = {}) {
+        const url = `${API_BASE_URL}${endpoint}`;
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                ...(authToken && { 'Authorization': `Bearer ${authToken}` })
+            },
+            ...options
+        };
+        if (options.body && typeof options.body === 'object') {
+            config.body = JSON.stringify(options.body);
+        }
+        const response = await fetch(url, config);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Request failed');
+        return data;
+    }
+
+    // Check if user is logged in
+    async function checkAuth() {
+        if (!authToken) return false;
+        try {
+            // Token validation would happen server-side on each request
+            return true;
+        } catch {
+            authToken = null;
+            localStorage.removeItem('authToken');
+            return false;
+        }
+    }
+
+    // Update UI based on auth state
+    async function updateAuthUI() {
+        const isLoggedIn = await checkAuth();
+        // We can add UI updates here later (show username, hide login button, etc.)
+    }
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff', 100: '#ede9fe', 200: '#ddd6fe', 300: '#c4b5fd',
+                            400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9',
+                            800: '#5b21b6', 900: '#4c1d95',
+                        }
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c4b5fd; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a78bfa; }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        @keyframes pulse-glow { 0%,100%{box-shadow:0 0 20px rgba(139,92,246,0.3)} 50%{box-shadow:0 0 40px rgba(139,92,246,0.6)} }
+        .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        @keyframes fillBar { from{width:0%} to{width:82%} }
+        .progress-fill { animation: fillBar 1.5s ease-out forwards; }
+        .glass { background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); }
+        .dark .glass { background: rgba(17,24,39,0.7); }
+        .phone-mockup { border: 12px solid #1f2937; border-radius: 40px; position: relative; overflow: hidden; background: white; }
+        .dark .phone-mockup { border-color: #374151; background: #111827; }
+        .phone-notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 24px; background: #1f2937; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; z-index: 10; }
+        .dark .phone-notch { background: #374151; }
+        .feature-card { transition: all 0.3s ease; }
+        .feature-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(139,92,246,0.15); }
+        .step-circle { background: linear-gradient(135deg, #8b5cf6, #6d28d9); box-shadow: 0 4px 15px rgba(139,92,246,0.4); }
+        .modal-overlay { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+        body, .phone-mockup, .feature-card { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+        .gradient-text { background: linear-gradient(135deg, #8b5cf6, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .btn-shine { position: relative; overflow: hidden; }
+        .btn-shine::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%); transform: rotate(30deg); transition: all 0.6s; }
+        .btn-shine:hover::after { left: 100%; }
+        .social-icon { transition: all 0.3s ease; }
+        .social-icon:hover { transform: translateY(-3px); color: #8b5cf6; }
+        .data-card { transition: all 0.3s ease; border-left: 4px solid transparent; }
+        .data-card:hover { border-left-color: #8b5cf6; transform: translateX(5px); }
+        .interest-chip { transition: all 0.2s ease; cursor: pointer; }
+        .interest-chip.selected { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; border-color: transparent; }
+        .tab-btn.active { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .collapsible-content.open { max-height: 2000px; }
+        .db-table-row:hover { background: rgba(139,92,246,0.05); }
+        .match-score-bar { transition: width 1s ease-out; }
+    </style>
+<base target="_blank">
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+<!-- Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-gray-200 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center"><i class="fas fa-link text-white text-lg"></i></div>
+                <span class="text-2xl font-bold text-gray-900 dark:text-white">Linkify</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button onclick="openThemeModal()" class="flex items-center space-x-2 px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    <i id="theme-icon" class="fas fa-sun text-gray-600 dark:text-gray-400"></i>
+                    <span id="theme-text" class="text-sm font-medium text-gray-700 dark:text-gray-300">Light</span>
+                </button>
+                <button onclick="openSignupModal()" class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2.5 rounded-xl font-medium transition-all hover:shadow-lg hover:shadow-primary-500/30 btn-shine">Sign Up</button>
+                <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <i class="fas fa-bars text-xl text-gray-700 dark:text-gray-300"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden lg:hidden glass border-t border-gray-200 dark:border-gray-800">
+        <div class="px-4 py-4 space-y-3">
+            <a href="#features" class="block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300">Features</a>
+            <a href="#how-it-works" class="block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300">How It Works</a>
+            <a href="#safety" class="block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300">Safety</a>
+            <a href="#data-structure" class="block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-primary-600 dark:text-primary-400 font-medium">Platform Architecture</a>
+            <a href="#match-simulator" class="block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-primary-600 dark:text-primary-400 font-medium">Match Simulator</a>
+            <a href="#vision" class="block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300">Vision</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="pt-24 pb-16 lg:pt-32 lg:pb-24 px-4">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div class="flex justify-center reveal active">
+                <div class="phone-mockup w-72 h-[580px] shadow-2xl animate-float">
+                    <div class="phone-notch"></div>
+                    <div class="h-full bg-gray-50 dark:bg-gray-900 pt-8 px-4 pb-4 flex flex-col">
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="text-primary-600 font-semibold text-sm">Linkify</span>
+                            <i class="fas fa-cog text-gray-400 text-sm"></i>
+                        </div>
+                        <div class="bg-gradient-to-br from-primary-500 to-primary-700 rounded-3xl p-6 text-white text-center flex-1 flex flex-col justify-center">
+                            <h3 class="text-xl font-bold mb-1">It's a Match! <i class="fas fa-heart text-pink-300"></i></h3>
+                            <p class="text-primary-100 text-sm mb-6">You and Match #A7428 like each other.</p>
+                            <div class="flex justify-center items-center mb-6">
+                                <div class="w-16 h-16 rounded-full bg-yellow-400 flex items-center justify-center text-3xl border-4 border-white shadow-lg z-10">&#x1F468;</div>
+                                <div class="w-16 h-16 rounded-full bg-pink-400 flex items-center justify-center text-3xl border-4 border-white shadow-lg -ml-4 z-20">&#x1F469;</div>
+                                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center -ml-3 z-30 shadow-md"><i class="fas fa-heart text-primary-500 text-xs"></i></div>
+                            </div>
+                            <div class="mb-6">
+                                <p class="text-primary-100 text-sm mb-2">Compatibility</p>
+                                <p class="text-4xl font-bold">82%</p>
+                                <div class="mt-3 bg-primary-800/50 rounded-full h-2 overflow-hidden"><div class="bg-white h-full rounded-full progress-fill" style="width:82%"></div></div>
+                            </div>
+                            <div class="flex justify-center gap-2 mb-6">
+                                <span class="px-3 py-1 bg-white/20 rounded-full text-xs">Music</span>
+                                <span class="px-3 py-1 bg-white/20 rounded-full text-xs">Travel</span>
+                                <span class="px-3 py-1 bg-white/20 rounded-full text-xs">Movies</span>
+                            </div>
+                            <button class="w-full bg-white text-primary-600 py-3 rounded-xl font-semibold hover:bg-primary-50 transition-colors">Start Chatting</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center lg:text-left reveal">
+                <div class="inline-flex items-center space-x-2 px-4 py-2 bg-primary-100 dark:bg-primary-900/30 rounded-full text-primary-700 dark:text-primary-300 text-sm font-medium mb-6">
+                    <i class="fas fa-heart text-primary-500"></i><span>Smart matches, real connections</span>
+                </div>
+                <h1 class="text-4xl lg:text-6xl font-bold mb-6 leading-tight">Connect <span class="gradient-text">Anonymously.</span><br>Meet Authentically.</h1>
+                <p class="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-lg mx-auto lg:mx-0">Linkify uses advanced matching to connect you with people who share your vibe, interests, and location preferences. Chat anonymously, build real connections, and reveal when you're ready.</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <button onclick="openSignupModal()" class="bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all hover:shadow-xl hover:shadow-primary-500/30 btn-shine flex items-center justify-center space-x-2">
+                        <span>Get Started Free</span><i class="fas fa-arrow-right"></i>
+                    </button>
+                    <a href="#how-it-works" class="px-8 py-4 rounded-xl font-semibold text-lg border-2 border-gray-300 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 transition-all flex items-center justify-center space-x-2">
+                        <span>How It Works</span><i class="fas fa-play-circle"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16 reveal">
+            <p class="text-primary-600 font-semibold text-sm tracking-widest uppercase mb-3">Why Linkify</p>
+            <h2 class="text-3xl lg:text-5xl font-bold mb-4">Built for Real Connections</h2>
+            <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">Every feature designed to help you meet someone special — safely and authentically.</p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="feature-card bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 reveal">
+                <div class="w-14 h-14 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-user-check text-primary-600 text-xl"></i></div>
+                <h3 class="text-xl font-bold mb-2">Verified Users</h3>
+                <p class="text-gray-600 dark:text-gray-400">Real people, real connections. Every profile goes through verification.</p>
+            </div>
+            <div class="feature-card bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 reveal">
+                <div class="w-14 h-14 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-lock text-primary-600 text-xl"></i></div>
+                <h3 class="text-xl font-bold mb-2">Privacy First</h3>
+                <p class="text-gray-600 dark:text-gray-400">Chat anonymously until you're ready. Your identity stays hidden.</p>
+            </div>
+            <div class="feature-card bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 reveal">
+                <div class="w-14 h-14 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-brain text-primary-600 text-xl"></i></div>
+                <h3 class="text-xl font-bold mb-2">Smart Matching</h3>
+                <p class="text-gray-600 dark:text-gray-400">Our algorithm finds your perfect match based on interests & personality.</p>
+            </div>
+            <div class="feature-card bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 reveal">
+                <div class="w-14 h-14 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-map-marker-alt text-primary-600 text-xl"></i></div>
+                <h3 class="text-xl font-bold mb-2">Location Based</h3>
+                <p class="text-gray-600 dark:text-gray-400">Connect with people within your preferred area and distance.</p>
+            </div>
+            <div class="feature-card bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 reveal">
+                <div class="w-14 h-14 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-shield-alt text-primary-600 text-xl"></i></div>
+                <h3 class="text-xl font-bold mb-2">Safe & Secure</h3>
+                <p class="text-gray-600 dark:text-gray-400">Your safety is our highest priority. 24/7 monitoring & reporting.</p>
+            </div>
+            <div class="feature-card bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 reveal">
+                <div class="w-14 h-14 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-user-secret text-primary-600 text-xl"></i></div>
+                <h3 class="text-xl font-bold mb-2">Anonymous Chat</h3>
+                <p class="text-gray-600 dark:text-gray-400">No names, no pressure. Just genuine conversations that flow naturally.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section id="how-it-works" class="py-20 px-4 bg-gray-100 dark:bg-gray-800/50">
+    <div class="max-w-3xl mx-auto">
+        <div class="text-center mb-16 reveal">
+            <p class="text-primary-600 font-semibold text-sm tracking-widest uppercase mb-3">How It Works</p>
+            <h2 class="text-3xl lg:text-5xl font-bold mb-4">Six Simple Steps to Connection</h2>
+            <p class="text-gray-600 dark:text-gray-400 text-lg">From signup to your first chat — it's easier than you think.</p>
+        </div>
+        <div class="space-y-8">
+            <div class="flex items-start space-x-6 reveal">
+                <div class="flex-shrink-0 w-16 h-16 step-circle rounded-full flex items-center justify-center text-white text-2xl font-bold">1</div>
+                <div class="pt-2"><h3 class="text-xl font-bold mb-1">Create Account</h3><p class="text-gray-600 dark:text-gray-400">Sign up with email and verify instantly.</p></div>
+            </div>
+            <div class="flex items-start space-x-6 reveal">
+                <div class="flex-shrink-0 w-16 h-16 step-circle rounded-full flex items-center justify-center text-white text-2xl font-bold">2</div>
+                <div class="pt-2"><h3 class="text-xl font-bold mb-1">Complete Profile</h3><p class="text-gray-600 dark:text-gray-400">Add interests, personality, and bio.</p></div>
+            </div>
+            <div class="flex items-start space-x-6 reveal">
+                <div class="flex-shrink-0 w-16 h-16 step-circle rounded-full flex items-center justify-center text-white text-2xl font-bold">3</div>
+                <div class="pt-2"><h3 class="text-xl font-bold mb-1">Set Preferences</h3><p class="text-gray-600 dark:text-gray-400">Choose age, location, and interests.</p></div>
+            </div>
+            <div class="flex items-start space-x-6 reveal">
+                <div class="flex-shrink-0 w-16 h-16 step-circle rounded-full flex items-center justify-center text-white text-2xl font-bold">4</div>
+                <div class="pt-2"><h3 class="text-xl font-bold mb-1">Get Matched</h3><p class="text-gray-600 dark:text-gray-400">Our engine finds compatible people.</p></div>
+            </div>
+            <div class="flex items-start space-x-6 reveal">
+                <div class="flex-shrink-0 w-16 h-16 step-circle rounded-full flex items-center justify-center text-white text-2xl font-bold">5</div>
+                <div class="pt-2"><h3 class="text-xl font-bold mb-1">Chat Anonymously</h3><p class="text-gray-600 dark:text-gray-400">Start real conversations, no names.</p></div>
+            </div>
+            <div class="flex items-start space-x-6 reveal">
+                <div class="flex-shrink-0 w-16 h-16 step-circle rounded-full flex items-center justify-center text-white text-2xl font-bold">6</div>
+                <div class="pt-2"><h3 class="text-xl font-bold mb-1">Reveal (Optional)</h3><p class="text-gray-600 dark:text-gray-400">Share identity when both agree.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Safety Section -->
+<section id="safety" class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16 reveal">
+            <p class="text-primary-600 font-semibold text-sm tracking-widest uppercase mb-3">Safety</p>
+            <h2 class="text-3xl lg:text-5xl font-bold mb-4">Your Safety, Our Priority</h2>
+            <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">Multiple layers of protection so you can focus on connecting.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div class="feature-card bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 reveal">
+                <div class="w-14 h-14 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-flag text-primary-600 text-xl"></i></div>
+                <h3 class="text-xl font-bold mb-2">Report User</h3>
+                <p class="text-gray-600 dark:text-gray-400">One-click reporting for harassment, spam, fake accounts, or inappropriate content.</p>
+            </div>
+            <div class="feature-card bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 reveal">
+                <div class="w-14 h-14 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-ban text-primary-600 text-xl"></i></div>
+                <h3 class="text-xl font-bold mb-2">Block User</h3>
+                <p class="text-gray-600 dark:text-gray-400">Immediately stop all communication. The other user won't know you blocked them.</p>
+            </div>
+            <div class="feature-card bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 reveal">
+                <div class="w-14 h-14 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-filter text-primary-600 text-xl"></i></div>
+                <h3 class="text-xl font-bold mb-2">Word Filter</h3>
+                <p class="text-gray-600 dark:text-gray-400">Automatic detection of insults, harassment, and spam before messages are sent.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== PLATFORM ARCHITECTURE SECTION ==================== -->
+<section id="data-structure" class="py-20 px-4 bg-gradient-to-b from-gray-100 to-white dark:from-gray-800/50 dark:to-gray-900">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16 reveal">
+            <p class="text-primary-600 font-semibold text-sm tracking-widest uppercase mb-3">Technical Deep Dive</p>
+            <h2 class="text-3xl lg:text-5xl font-bold mb-4">Platform Architecture</h2>
+            <p class="text-gray-600 dark:text-gray-400 text-lg max-w-3xl mx-auto">Explore the complete data structure powering Linkify's matchmaking engine. Every field, score calculation, and database collection documented.</p>
+        </div>
+
+        <!-- Architecture Tabs -->
+        <div class="flex flex-wrap justify-center gap-3 mb-12 reveal">
+            <button onclick="showArchTab('overview')" id="tab-overview" class="tab-btn active px-6 py-3 rounded-xl font-medium border border-gray-300 dark:border-gray-700 transition-all">Overview</button>
+            <button onclick="showArchTab('user-data')" id="tab-user-data" class="tab-btn px-6 py-3 rounded-xl font-medium border border-gray-300 dark:border-gray-700 transition-all">User Data</button>
+            <button onclick="showArchTab('matching')" id="tab-matching" class="tab-btn px-6 py-3 rounded-xl font-medium border border-gray-300 dark:border-gray-700 transition-all">Matching Engine</button>
+            <button onclick="showArchTab('scoring')" id="tab-scoring" class="tab-btn px-6 py-3 rounded-xl font-medium border border-gray-300 dark:border-gray-700 transition-all">Score System</button>
+            <button onclick="showArchTab('database')" id="tab-database" class="tab-btn px-6 py-3 rounded-xl font-medium border border-gray-300 dark:border-gray-700 transition-all">Database</button>
+        </div>
+
+        <!-- Tab Content: Overview -->
+        <div id="arch-overview" class="arch-content">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 text-center reveal">
+                    <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4"><i class="fas fa-database text-primary-600 text-2xl"></i></div>
+                    <h3 class="text-2xl font-bold mb-1">11</h3><p class="text-gray-600 dark:text-gray-400">Data Collections</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 text-center reveal">
+                    <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4"><i class="fas fa-calculator text-primary-600 text-2xl"></i></div>
+                    <h3 class="text-2xl font-bold mb-1">100</h3><p class="text-gray-600 dark:text-gray-400">Max Match Score</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 text-center reveal">
+                    <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4"><i class="fas fa-tags text-primary-600 text-2xl"></i></div>
+                    <h3 class="text-2xl font-bold mb-1">20+</h3><p class="text-gray-600 dark:text-gray-400">Interest Categories</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 text-center reveal">
+                    <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4"><i class="fas fa-graduation-cap text-primary-600 text-2xl"></i></div>
+                    <h3 class="text-2xl font-bold mb-1">18</h3><p class="text-gray-600 dark:text-gray-400">Academic Levels</p>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 border border-gray-200 dark:border-gray-700 reveal">
+                <h3 class="text-xl font-bold mb-8 text-center">Linkify System Flow</h3>
+                <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+                    <div class="flex flex-col items-center">
+                        <div class="w-20 h-20 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mb-2"><i class="fas fa-user-plus text-primary-600 text-2xl"></i></div>
+                        <span class="font-semibold text-sm">Sign Up</span><span class="text-xs text-gray-500">Account + Profile</span>
+                    </div>
+                    <i class="fas fa-arrow-right text-primary-400 hidden lg:block"></i><i class="fas fa-arrow-down text-primary-400 lg:hidden"></i>
+                    <div class="flex flex-col items-center">
+                        <div class="w-20 h-20 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mb-2"><i class="fas fa-sliders-h text-primary-600 text-2xl"></i></div>
+                        <span class="font-semibold text-sm">Preferences</span><span class="text-xs text-gray-500">Match Filters</span>
+                    </div>
+                    <i class="fas fa-arrow-right text-primary-400 hidden lg:block"></i><i class="fas fa-arrow-down text-primary-400 lg:hidden"></i>
+                    <div class="flex flex-col items-center">
+                        <div class="w-20 h-20 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mb-2"><i class="fas fa-brain text-primary-600 text-2xl"></i></div>
+                        <span class="font-semibold text-sm">Algorithm</span><span class="text-xs text-gray-500">Score Calculation</span>
+                    </div>
+                    <i class="fas fa-arrow-right text-primary-400 hidden lg:block"></i><i class="fas fa-arrow-down text-primary-400 lg:hidden"></i>
+                    <div class="flex flex-col items-center">
+                        <div class="w-20 h-20 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mb-2"><i class="fas fa-heart text-primary-600 text-2xl"></i></div>
+                        <span class="font-semibold text-sm">Match</span><span class="text-xs text-gray-500">Connection Made</span>
+                    </div>
+                    <i class="fas fa-arrow-right text-primary-400 hidden lg:block"></i><i class="fas fa-arrow-down text-primary-400 lg:hidden"></i>
+                    <div class="flex flex-col items-center">
+                        <div class="w-20 h-20 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mb-2"><i class="fas fa-comments text-primary-600 text-2xl"></i></div>
+                        <span class="font-semibold text-sm">Chat</span><span class="text-xs text-gray-500">Anonymous / Reveal</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: User Data -->
+        <div id="arch-user-data" class="arch-content hidden">
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Account Information -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden reveal">
+                    <button onclick="toggleCollapse('account-info')" class="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center"><i class="fas fa-id-card text-primary-600"></i></div>
+                            <div class="text-left"><h3 class="font-bold">1. Account Information</h3><p class="text-sm text-gray-500">Core user identity fields</p></div>
+                        </div>
+                        <i class="fas fa-chevron-down transition-transform" id="icon-account-info"></i>
+                    </button>
+                    <div id="account-info" class="collapsible-content open">
+                        <div class="px-6 pb-6 space-y-3">
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                                <div class="flex justify-between items-center"><span class="font-medium text-sm">User ID</span><span class="text-xs bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 px-2 py-1 rounded-full">auto-generated</span></div>
+                                <p class="text-xs text-gray-500 mt-1">Unique identifier (UUID)</p>
+                            </div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><div class="flex justify-between items-center"><span class="font-medium text-sm">Username</span><span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full">string</span></div></div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><div class="flex justify-between items-center"><span class="font-medium text-sm">Email Address</span><span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full">string</span></div></div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><div class="flex justify-between items-center"><span class="font-medium text-sm">Date Joined</span><span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full">timestamp</span></div></div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                                <div class="flex justify-between items-center"><span class="font-medium text-sm">Account Status</span><span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full">enum</span></div>
+                                <p class="text-xs text-gray-500 mt-1">Active | Suspended | Banned</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Information -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden reveal">
+                    <button onclick="toggleCollapse('profile-info')" class="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center"><i class="fas fa-user text-primary-600"></i></div>
+                            <div class="text-left"><h3 class="font-bold">2. Profile Information</h3><p class="text-sm text-gray-500">Public-facing profile data</p></div>
+                        </div>
+                        <i class="fas fa-chevron-down transition-transform" id="icon-profile-info"></i>
+                    </button>
+                    <div id="profile-info" class="collapsible-content">
+                        <div class="px-6 pb-6 space-y-3">
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><span class="font-medium text-sm">Display Name</span><span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full float-right">string</span></div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                                <span class="font-medium text-sm">Age Range</span><span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full float-right">enum</span>
+                                <p class="text-xs text-gray-500 mt-2">13-17 | 18-20 | 21-25 | 26-30 | 31+</p>
+                            </div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><span class="font-medium text-sm">Gender</span><span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full float-right">string</span></div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><span class="font-medium text-sm">Country / State</span><span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full float-right">string</span></div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><span class="font-medium text-sm">Preferred Language</span><span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full float-right">string</span></div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><span class="font-medium text-sm">Bio</span><span class="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 px-2 py-1 rounded-full float-right">optional</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Information -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden reveal">
+                    <button onclick="toggleCollapse('academic-info')" class="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center"><i class="fas fa-graduation-cap text-primary-600"></i></div>
+                            <div class="text-left"><h3 class="font-bold">3. Academic Information</h3><p class="text-sm text-gray-500">Education-based matching data</p></div>
+                        </div>
+                        <i class="fas fa-chevron-down transition-transform" id="icon-academic-info"></i>
+                    </button>
+                    <div id="academic-info" class="collapsible-content">
+                        <div class="px-6 pb-6 space-y-3">
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                                <span class="font-medium text-sm">Academic Status</span><span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full float-right">enum</span>
+                                <p class="text-xs text-gray-500 mt-2">In School | Graduate | Not in School</p>
+                            </div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><span class="font-medium text-sm">Institution Name</span><span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full float-right">string</span></div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                                <span class="font-medium text-sm">Academic Level</span><span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full float-right">18 options</span>
+                                <div class="text-xs text-gray-500 mt-2 grid grid-cols-2 gap-1"><span>JSS1-3</span><span>SS1-3</span><span>ND1-2</span><span>HND1-2</span><span>100-600 Level</span><span>Postgraduate</span></div>
+                            </div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><span class="font-medium text-sm">Faculty / Department</span><span class="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 px-2 py-1 rounded-full float-right">optional</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Match Preferences -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden reveal">
+                    <button onclick="toggleCollapse('match-prefs')" class="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center"><i class="fas fa-sliders-h text-primary-600"></i></div>
+                            <div class="text-left"><h3 class="font-bold">4. Match Preferences</h3><p class="text-sm text-gray-500">User-defined matching criteria</p></div>
+                        </div>
+                        <i class="fas fa-chevron-down transition-transform" id="icon-match-prefs"></i>
+                    </button>
+                    <div id="match-prefs" class="collapsible-content">
+                        <div class="px-6 pb-6 space-y-3">
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                                <span class="font-medium text-sm">Looking For</span><span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full float-right">multi-select</span>
+                                <div class="flex flex-wrap gap-1 mt-2">
+                                    <span class="text-xs bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 px-2 py-1 rounded-full">Friendship</span>
+                                    <span class="text-xs bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 px-2 py-1 rounded-full">Study Partner</span>
+                                    <span class="text-xs bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 px-2 py-1 rounded-full">Networking</span>
+                                    <span class="text-xs bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 px-2 py-1 rounded-full">Gaming</span>
+                                    <span class="text-xs bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 px-2 py-1 rounded-full">Group Chat</span>
+                                    <span class="text-xs bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 px-2 py-1 rounded-full">Random</span>
+                                </div>
+                            </div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><span class="font-medium text-sm">Preferred Age Range</span><span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full float-right">enum</span></div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><span class="font-medium text-sm">Preferred Gender</span><span class="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 px-2 py-1 rounded-full float-right">optional</span></div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                                <span class="font-medium text-sm">Preferred Location</span><span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full float-right">enum</span>
+                                <p class="text-xs text-gray-500 mt-1">Same Country | Same Region | Global</p>
+                            </div>
+                            <div class="data-card bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                                <span class="font-medium text-sm">Academic Filters</span><span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full float-right">multi-select</span>
+                                <div class="flex flex-wrap gap-1 mt-2">
+                                    <span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full">Same Institution</span>
+                                    <span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full">Same Level</span>
+                                    <span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full">Same Faculty</span>
+                                    <span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full">Same Dept</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interests & Personality -->
+            <div class="grid lg:grid-cols-2 gap-8 mt-8">
+                <!-- Interests -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden reveal">
+                    <button onclick="toggleCollapse('interests-data')" class="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center"><i class="fas fa-heart text-primary-600"></i></div>
+                            <div class="text-left"><h3 class="font-bold">5. Interests</h3><p class="text-sm text-gray-500">5 categories, multi-select</p></div>
+                        </div>
+                        <i class="fas fa-chevron-down transition-transform" id="icon-interests-data"></i>
+                    </button>
+                    <div id="interests-data" class="collapsible-content">
+                        <div class="px-6 pb-6 space-y-4">
+                            <div>
+                                <h4 class="text-sm font-semibold text-primary-600 mb-2"><i class="fas fa-film mr-2"></i>Entertainment</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Music</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Movies</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">TV Shows</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Anime</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-semibold text-primary-600 mb-2"><i class="fas fa-laptop-code mr-2"></i>Technology</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Programming</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">AI</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Cybersecurity</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Gadgets</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-semibold text-primary-600 mb-2"><i class="fas fa-leaf mr-2"></i>Lifestyle</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Fashion</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Fitness</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Food</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Travel</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-semibold text-primary-600 mb-2"><i class="fas fa-book mr-2"></i>Education</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Science</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Mathematics</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Literature</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Business</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-semibold text-primary-600 mb-2"><i class="fas fa-gamepad mr-2"></i>Recreation</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Gaming</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Sports</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Photography</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">Art</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personality Assessment -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden reveal">
+                    <button onclick="toggleCollapse('personality-data')" class="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center"><i class="fas fa-brain text-primary-600"></i></div>
+                            <div class="text-left"><h3 class="font-bold">6. Personality Assessment</h3><p class="text-sm text-gray-500">6 binary trait spectrums</p></div>
+                        </div>
+                        <i class="fas fa-chevron-down transition-transform" id="icon-personality-data"></i>
+                    </button>
+                    <div id="personality-data" class="collapsible-content">
+                        <div class="px-6 pb-6 space-y-4">
+                            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                                <div class="flex justify-between text-sm mb-2"><span class="font-medium">Introvert</span><span class="font-medium">Extrovert</span></div>
+                                <div class="h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-400 to-primary-600 rounded-full" style="width:60%"></div></div>
+                            </div>
+                            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                                <div class="flex justify-between text-sm mb-2"><span class="font-medium">Serious</span><span class="font-medium">Fun</span></div>
+                                <div class="h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-400 to-primary-600 rounded-full" style="width:40%"></div></div>
+                            </div>
+                            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                                <div class="flex justify-between text-sm mb-2"><span class="font-medium">Leader</span><span class="font-medium">Follower</span></div>
+                                <div class="h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-400 to-primary-600 rounded-full" style="width:75%"></div></div>
+                            </div>
+                            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                                <div class="flex justify-between text-sm mb-2"><span class="font-medium">Morning</span><span class="font-medium">Night Owl</span></div>
+                                <div class="h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-400 to-primary-600 rounded-full" style="width:30%"></div></div>
+                            </div>
+                            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                                <div class="flex justify-between text-sm mb-2"><span class="font-medium">Talkative</span><span class="font-medium">Reserved</span></div>
+                                <div class="h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-400 to-primary-600 rounded-full" style="width:55%"></div></div>
+                            </div>
+                            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                                <div class="flex justify-between text-sm mb-2"><span class="font-medium">Text Chat</span><span class="font-medium">Voice Chat</span></div>
+                                <div class="h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary-400 to-primary-600 rounded-full" style="width:80%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Matching Engine -->
+        <div id="arch-matching" class="arch-content hidden">
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Anonymous Chat Features -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 reveal">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center"><i class="fas fa-user-secret text-primary-600 text-xl"></i></div>
+                        <div><h3 class="text-xl font-bold">8. Anonymous Chat Features</h3><p class="text-sm text-gray-500">Privacy-first communication</p></div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-check-circle text-primary-500"></i><span class="text-sm">Auto-generated Anonymous Name</span></div>
+                        <div class="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-check-circle text-primary-500"></i><span class="text-sm">Hidden Identity (Real name never shown)</span></div>
+                        <div class="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-check-circle text-primary-500"></i><span class="text-sm">Optional Profile Picture</span></div>
+                        <div class="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-check-circle text-primary-500"></i><span class="text-sm">Identity Reveal (Mutual Consent Required)</span></div>
+                    </div>
+                </div>
+
+                <!-- Safety Features -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 reveal">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center"><i class="fas fa-shield-alt text-primary-600 text-xl"></i></div>
+                        <div><h3 class="text-xl font-bold">9. Safety Features</h3><p class="text-sm text-gray-500">Multi-layer protection system</p></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="flex items-center space-x-2 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-flag text-red-500"></i><span class="text-sm font-medium">Report User</span></div>
+                        <div class="flex items-center space-x-2 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-ban text-orange-500"></i><span class="text-sm font-medium">Block User</span></div>
+                        <div class="flex items-center space-x-2 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-volume-mute text-yellow-500"></i><span class="text-sm font-medium">Mute User</span></div>
+                        <div class="flex items-center space-x-2 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-eye text-blue-500"></i><span class="text-sm font-medium">Content Moderation</span></div>
+                        <div class="flex items-center space-x-2 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-robot text-purple-500"></i><span class="text-sm font-medium">Spam Detection</span></div>
+                        <div class="flex items-center space-x-2 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-user-check text-green-500"></i><span class="text-sm font-medium">Account Verification</span></div>
+                        <div class="flex items-center space-x-2 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl col-span-2"><i class="fas fa-gavel text-primary-500"></i><span class="text-sm font-medium">Community Guidelines Enforcement</span></div>
+                    </div>
+                </div>
+
+                <!-- Chat Features -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 lg:col-span-2 reveal">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center"><i class="fas fa-comments text-primary-600 text-xl"></i></div>
+                        <div><h3 class="text-xl font-bold">10. Chat Features</h3><p class="text-sm text-gray-500">Rich messaging experience</p></div>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-comment-dots text-primary-500 text-2xl mb-2"></i><p class="text-sm font-medium">One-to-One</p></div>
+                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-handshake text-primary-500 text-2xl mb-2"></i><p class="text-sm font-medium">Match Requests</p></div>
+                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-circle text-green-500 text-2xl mb-2"></i><p class="text-sm font-medium">Online Status</p></div>
+                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-keyboard text-primary-500 text-2xl mb-2"></i><p class="text-sm font-medium">Typing Indicator</p></div>
+                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-check-double text-blue-500 text-2xl mb-2"></i><p class="text-sm font-medium">Read Receipts</p></div>
+                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-image text-purple-500 text-2xl mb-2"></i><p class="text-sm font-medium">Media Sharing</p></div>
+                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-microphone text-red-500 text-2xl mb-2"></i><p class="text-sm font-medium">Voice Notes</p></div>
+                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><i class="fas fa-history text-orange-500 text-2xl mb-2"></i><p class="text-sm font-medium">Match History</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Score System -->
+        <div id="arch-scoring" class="arch-content hidden">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 border border-gray-200 dark:border-gray-700 reveal">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center space-x-2 px-4 py-2 bg-primary-100 dark:bg-primary-900/30 rounded-full text-primary-700 dark:text-primary-300 text-sm font-medium mb-4">
+                        <i class="fas fa-calculator text-primary-500"></i><span>7. Matchmaking Score System</span>
+                    </div>
+                    <h3 class="text-2xl font-bold">How Compatibility is Calculated</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">Maximum possible score: <span class="font-bold text-primary-600">100 points</span></p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <!-- Interest Match -->
+                    <div class="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2"><i class="fas fa-heart text-primary-500"></i><span class="font-semibold">Interest Match</span></div>
+                            <span class="text-primary-600 font-bold">+10 pts each</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mb-3">Same Interest = +10 Points (Max 40)</p>
+                        <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-primary-400 to-primary-600 rounded-full" style="width:40%"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Weight: 40%</p>
+                    </div>
+
+                    <!-- Age Compatibility -->
+                    <div class="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2"><i class="fas fa-birthday-cake text-primary-500"></i><span class="font-semibold">Age Compatibility</span></div>
+                            <span class="text-primary-600 font-bold">+20 pts</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mb-3">Same Age Range = +20 Points</p>
+                        <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-primary-400 to-primary-600 rounded-full" style="width:20%"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Weight: 20%</p>
+                    </div>
+
+                    <!-- Language Match -->
+                    <div class="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2"><i class="fas fa-language text-primary-500"></i><span class="font-semibold">Language Match</span></div>
+                            <span class="text-primary-600 font-bold">+20 pts</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mb-3">Same Language = +20 Points</p>
+                        <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-primary-400 to-primary-600 rounded-full" style="width:20%"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Weight: 20%</p>
+                    </div>
+
+                    <!-- Personality Match -->
+                    <div class="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2"><i class="fas fa-brain text-primary-500"></i><span class="font-semibold">Personality Match</span></div>
+                            <span class="text-primary-600 font-bold">+20 pts</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mb-3">Similar Personality = +20 Points</p>
+                        <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-primary-400 to-primary-600 rounded-full" style="width:20%"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Weight: 20%</p>
+                    </div>
+
+                    <!-- Location Match -->
+                    <div class="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2"><i class="fas fa-map-marker-alt text-primary-500"></i><span class="font-semibold">Location Match</span></div>
+                            <span class="text-primary-600 font-bold">+10 pts</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mb-3">Same Region/Country = +10 Points</p>
+                        <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-primary-400 to-primary-600 rounded-full" style="width:10%"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Weight: 10%</p>
+                    </div>
+
+                    <!-- Academic Match -->
+                    <div class="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2"><i class="fas fa-graduation-cap text-primary-500"></i><span class="font-semibold">Academic Match</span></div>
+                            <span class="text-primary-600 font-bold">+35 pts max</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mb-3">Institution +15, Level +10, Dept +10</p>
+                        <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-primary-400 to-primary-600 rounded-full" style="width:35%"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Weight: 35% (bonus)</p>
+                    </div>
+                </div>
+
+                <!-- Match Score Ranges -->
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-2xl p-6 text-center">
+                        <div class="text-3xl font-bold text-red-600 dark:text-red-400 mb-2">0-40</div>
+                        <div class="text-sm font-semibold text-red-700 dark:text-red-300 mb-1">Low Match</div>
+                        <p class="text-xs text-gray-500">Few shared interests or incompatible preferences</p>
+                    </div>
+                    <div class="bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-200 dark:border-yellow-800 rounded-2xl p-6 text-center">
+                        <div class="text-3xl font-bold text-yellow-600 dark:text-yellow-400 mb-2">41-70</div>
+                        <div class="text-sm font-semibold text-yellow-700 dark:text-yellow-300 mb-1">Moderate Match</div>
+                        <p class="text-xs text-gray-500">Some common ground worth exploring</p>
+                    </div>
+                    <div class="bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800 rounded-2xl p-6 text-center">
+                        <div class="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">71-100</div>
+                        <div class="text-sm font-semibold text-green-700 dark:text-green-300 mb-1">High Match</div>
+                        <p class="text-xs text-gray-500">Strong compatibility — great connection potential!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Database -->
+        <div id="arch-database" class="arch-content hidden">
+            <div class="text-center mb-8 reveal">
+                <p class="text-primary-600 font-semibold text-sm tracking-widest uppercase mb-3">11. Database Collections</p>
+                <h3 class="text-2xl font-bold">MongoDB Schema Design</h3>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-6">
+                <!-- Users Collection -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden reveal">
+                    <div class="px-6 py-4 bg-primary-50 dark:bg-primary-900/20 border-b border-primary-100 dark:border-primary-800">
+                        <div class="flex items-center space-x-2"><i class="fas fa-users text-primary-600"></i><h4 class="font-bold">Users Collection</h4></div>
+                    </div>
+                    <div class="px-6 py-4 space-y-2">
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">userId</code><span class="text-xs text-gray-500">UUID</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">username</code><span class="text-xs text-gray-500">String</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">email</code><span class="text-xs text-gray-500">String</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">profileData</code><span class="text-xs text-gray-500">Object</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">academicInfo</code><span class="text-xs text-gray-500">Object</span></div>
+                    </div>
+                </div>
+
+                <!-- Preferences Collection -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden reveal">
+                    <div class="px-6 py-4 bg-primary-50 dark:bg-primary-900/20 border-b border-primary-100 dark:border-primary-800">
+                        <div class="flex items-center space-x-2"><i class="fas fa-sliders-h text-primary-600"></i><h4 class="font-bold">Preferences Collection</h4></div>
+                    </div>
+                    <div class="px-6 py-4 space-y-2">
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">userId</code><span class="text-xs text-gray-500">Ref</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">lookingFor</code><span class="text-xs text-gray-500">Array</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">preferredAge</code><span class="text-xs text-gray-500">String</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">preferredGender</code><span class="text-xs text-gray-500">String</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">preferredLocation</code><span class="text-xs text-gray-500">String</span></div>
+                    </div>
+                </div>
+
+                <!-- Interests Collection -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden reveal">
+                    <div class="px-6 py-4 bg-primary-50 dark:bg-primary-900/20 border-b border-primary-100 dark:border-primary-800">
+                        <div class="flex items-center space-x-2"><i class="fas fa-heart text-primary-600"></i><h4 class="font-bold">Interests Collection</h4></div>
+                    </div>
+                    <div class="px-6 py-4 space-y-2">
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">userId</code><span class="text-xs text-gray-500">Ref</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">selectedInterests</code><span class="text-xs text-gray-500">Array</span></div>
+                    </div>
+                </div>
+
+                <!-- Matches Collection -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden reveal">
+                    <div class="px-6 py-4 bg-primary-50 dark:bg-primary-900/20 border-b border-primary-100 dark:border-primary-800">
+                        <div class="flex items-center space-x-2"><i class="fas fa-heart text-primary-600"></i><h4 class="font-bold">Matches Collection</h4></div>
+                    </div>
+                    <div class="px-6 py-4 space-y-2">
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">matchId</code><span class="text-xs text-gray-500">UUID</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">user1</code><span class="text-xs text-gray-500">Ref</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">user2</code><span class="text-xs text-gray-500">Ref</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">compatibilityScore</code><span class="text-xs text-gray-500">Number</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">matchedAt</code><span class="text-xs text-gray-500">Timestamp</span></div>
+                    </div>
+                </div>
+
+                <!-- Chats Collection -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden reveal">
+                    <div class="px-6 py-4 bg-primary-50 dark:bg-primary-900/20 border-b border-primary-100 dark:border-primary-800">
+                        <div class="flex items-center space-x-2"><i class="fas fa-comments text-primary-600"></i><h4 class="font-bold">Chats Collection</h4></div>
+                    </div>
+                    <div class="px-6 py-4 space-y-2">
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">chatId</code><span class="text-xs text-gray-500">UUID</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">participants</code><span class="text-xs text-gray-500">Array[Ref]</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">messages</code><span class="text-xs text-gray-500">Array[Object]</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">lastMessage</code><span class="text-xs text-gray-500">Object</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">timestamp</code><span class="text-xs text-gray-500">Date</span></div>
+                    </div>
+                </div>
+
+                <!-- Reports Collection -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden reveal">
+                    <div class="px-6 py-4 bg-primary-50 dark:bg-primary-900/20 border-b border-primary-100 dark:border-primary-800">
+                        <div class="flex items-center space-x-2"><i class="fas fa-flag text-primary-600"></i><h4 class="font-bold">Reports Collection</h4></div>
+                    </div>
+                    <div class="px-6 py-4 space-y-2">
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">reportId</code><span class="text-xs text-gray-500">UUID</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">reporterId</code><span class="text-xs text-gray-500">Ref</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">reportedUserId</code><span class="text-xs text-gray-500">Ref</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">reason</code><span class="text-xs text-gray-500">String</span></div>
+                        <div class="db-table-row flex justify-between py-2 px-3 rounded-lg"><code class="text-sm text-primary-600">status</code><span class="text-xs text-gray-500">Enum</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== MATCH SIMULATOR SECTION ==================== -->
+<section id="match-simulator" class="py-20 px-4 bg-gray-100 dark:bg-gray-800/50">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16 reveal">
+            <p class="text-primary-600 font-semibold text-sm tracking-widest uppercase mb-3">Interactive Demo</p>
+            <h2 class="text-3xl lg:text-5xl font-bold mb-4">Matchmaking Simulator</h2>
+            <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">Configure two user profiles and see how Linkify's algorithm calculates compatibility in real-time.</p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8 mb-12">
+            <!-- User A Profile -->
+            <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 border border-gray-200 dark:border-gray-700 reveal">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center"><i class="fas fa-user text-blue-600 text-xl"></i></div>
+                    <div><h3 class="text-xl font-bold">User A Profile</h3><p class="text-sm text-gray-500">Configure preferences</p></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Age Range</label>
+                        <select id="userA-age" onchange="calculateMatch()" class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white">
+                            <option value="13-17">13-17</option><option value="18-20">18-20</option><option value="21-25" selected>21-25</option>
+                            <option value="26-30">26-30</option><option value="31+">31+</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Country</label>
+                        <select id="userA-country" onchange="calculateMatch()" class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white">
+                            <option value="Nigeria" selected>Nigeria</option><option value="Ghana">Ghana</option><option value="Kenya">Kenya</option>
+                            <option value="South Africa">South Africa</option><option value="UK">UK</option><option value="USA">USA</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Preferred Language</label>
+                        <select id="userA-lang" onchange="calculateMatch()" class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white">
+                            <option value="English" selected>English</option><option value="French">French</option><option value="Swahili">Swahili</option>
+                            <option value="Yoruba">Yoruba</option><option value="Igbo">Igbo</option><option value="Hausa">Hausa</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Academic Level</label>
+                        <select id="userA-level" onchange="calculateMatch()" class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white">
+                            <option value="JSS1">JSS1</option><option value="JSS2">JSS2</option><option value="JSS3">JSS3</option>
+                            <option value="SS1">SS1</option><option value="SS2">SS2</option><option value="SS3">SS3</option>
+                            <option value="ND1">ND1</option><option value="ND2">ND2</option><option value="HND1">HND1</option>
+                            <option value="HND2">HND2</option><option value="100 Level" selected>100 Level</option><option value="200 Level">200 Level</option>
+                            <option value="300 Level">300 Level</option><option value="400 Level">400 Level</option><option value="500 Level">500 Level</option>
+                            <option value="600 Level">600 Level</option><option value="Postgraduate">Postgraduate</option><option value="Graduate">Graduate</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Interests (select multiple)</label>
+                        <div class="flex flex-wrap gap-2" id="userA-interests">
+                            <span onclick="toggleInterest(this, 'A')" class="interest-chip px-3 py-1.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-sm cursor-pointer selected">Music</span>
+                            <span onclick="toggleInterest(this, 'A')" class="interest-chip px-3 py-1.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-sm cursor-pointer selected">Programming</span>
+                            <span onclick="toggleInterest(this, 'A')" class="interest-chip px-3 py-1.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-sm cursor-pointer">Gaming</span>
+                            <span onclick="toggleInterest(this, 'A')" class="interest-chip px-3 py-1.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-sm cursor-pointer selected">Travel</span>
+                            <span onclick="toggleInterest(this, 'A')" class="interest-chip px-3 py-1.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-sm cursor-pointer">Sports</span>
+                            <span onclick="toggleInterest(this, 'A')" class="interest-chip px-3 py-1.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-sm cursor-pointer">Movies</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User B Profile -->
+            <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 border border-gray-200 dark:border-gray-700 reveal">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="w-12 h-12 bg-pink-100 dark:bg-pink-900/30 rounded-xl flex items-center justify-center"><i class="fas fa-user text-pink-600 text-xl"></i></div>
+                    <div><h3 class="text-xl font-bold">User B Profile</h3><p class="text-sm text-gray-500">Configure preferences</p></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Age Range</label>
+                        <select id="userB-age" onchange="calculateMatch()" class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white">
+                            <option value="13-17">13-17</option><option value="18-20">18-20</option><option value="21-25" selected>21-25</option>
+                            <option value="26-30">26-30</option><option value="31+">31+</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Country</label>
+                        <select id="userB-country" onchange="calculateMatch()" class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white">
+                            <option value="Nigeria" selected>Nigeria</option><option value="Ghana">Ghana</option><option value="Kenya">Kenya</option>
+                            <option value="South Africa">South Africa</option><option value="UK">UK</option><option value="USA">USA</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Preferred Language</label>
+                        <select id="userB-lang" onchange="calculateMatch()" class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white">
+                            <option value="English" selected>English</option><option value="French">French</option><option value="Swahili">Swahili</option>
+                            <option value="Yoruba">Yoruba</option><option value="Igbo">Igbo</option><option value="Hausa">Hausa</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Academic Level</label>
+                        <select id="userB-level" onchange="calculateMatch()" class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white">
+                            <option value="JSS1">JSS1</option><option value="JSS2">JSS2</option><option value="JSS3">JSS3</option>
+                            <option value="SS1">SS1</option><option value="SS2">SS2</option><option value="SS3">SS3</option>
+                            <option value="ND1">ND1</option><option value="ND2">ND2</option><option value="HND1">HND1</option>
+                            <option value="HND2">HND2</option><option value="100 Level" selected>100 Level</option><option value="200 Level">200 Level</option>
+                            <option value="300 Level">300 Level</option><option value="400 Level">400 Level</option><option value="500 Level">500 Level</option>
+                            <option value="600 Level">600 Level</option><option value="Postgraduate">Postgraduate</option><option value="Graduate">Graduate</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Interests (select multiple)</label>
+                        <div class="flex flex-wrap gap-2" id="userB-interests">
+                            <span onclick="toggleInterest(this, 'B')" class="interest-chip px-3 py-1.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-sm cursor-pointer selected">Music</span>
+                            <span onclick="toggleInterest(this, 'B')" class="interest-chip px-3 py-1.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-sm cursor-pointer">Programming</span>
+                            <span onclick="toggleInterest(this, 'B')" class="interest-chip px-3 py-1.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-sm cursor-pointer selected">Gaming</span>
+                            <span onclick="toggleInterest(this, 'B')" class="interest-chip px-3 py-1.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-sm cursor-pointer">Travel</span>
+                            <span onclick="toggleInterest(this, 'B')" class="interest-chip px-3 py-1.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-sm cursor-pointer selected">Sports</span>
+                            <span onclick="toggleInterest(this, 'B')" class="interest-chip px-3 py-1.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-sm cursor-pointer">Movies</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Match Results -->
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 border border-gray-200 dark:border-gray-700 reveal">
+            <div class="text-center mb-8">
+                <h3 class="text-2xl font-bold mb-2">Compatibility Result</h3>
+                <div class="inline-flex items-center space-x-4">
+                    <div class="text-center">
+                        <div class="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-2xl mx-auto mb-1">&#x1F468;</div>
+                        <span class="text-sm font-medium">User A</span>
+                    </div>
+                    <div class="text-center">
+                        <div id="match-percentage" class="text-5xl font-bold gradient-text">65%</div>
+                        <span id="match-label" class="text-sm font-medium text-yellow-600">Moderate Match</span>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center text-2xl mx-auto mb-1">&#x1F469;</div>
+                        <span class="text-sm font-medium">User B</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Score Breakdown -->
+            <div class="space-y-4 max-w-2xl mx-auto">
+                <div>
+                    <div class="flex justify-between text-sm mb-1"><span>Interest Match</span><span id="score-interest">20 pts</span></div>
+                    <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden"><div id="bar-interest" class="h-full bg-primary-500 rounded-full match-score-bar" style="width:50%"></div></div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-sm mb-1"><span>Age Compatibility</span><span id="score-age">20 pts</span></div>
+                    <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden"><div id="bar-age" class="h-full bg-primary-500 rounded-full match-score-bar" style="width:100%"></div></div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-sm mb-1"><span>Language Match</span><span id="score-lang">20 pts</span></div>
+                    <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden"><div id="bar-lang" class="h-full bg-primary-500 rounded-full match-score-bar" style="width:100%"></div></div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-sm mb-1"><span>Location Match</span><span id="score-location">10 pts</span></div>
+                    <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden"><div id="bar-location" class="h-full bg-primary-500 rounded-full match-score-bar" style="width:100%"></div></div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-sm mb-1"><span>Academic Match</span><span id="score-academic">25 pts</span></div>
+                    <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden"><div id="bar-academic" class="h-full bg-primary-500 rounded-full match-score-bar" style="width:71%"></div></div>
+                </div>
+            </div>
+
+            <!-- Recommendation -->
+            <div id="match-recommendation" class="mt-8 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl text-center">
+                <i class="fas fa-info-circle text-yellow-600 mb-2"></i>
+                <p class="text-sm text-yellow-800 dark:text-yellow-300">Some common ground worth exploring. Try starting a conversation about your shared interests!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Vision / Founder Section -->
+<section id="vision" class="py-20 px-4 bg-gray-100 dark:bg-gray-800/50">
+    <div class="max-w-3xl mx-auto text-center">
+        <div class="reveal">
+            <p class="text-primary-600 font-semibold text-sm tracking-widest uppercase mb-3">The Vision</p>
+            <h2 class="text-3xl lg:text-5xl font-bold mb-12">Created with Purpose</h2>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 lg:p-12 border border-gray-200 dark:border-gray-700 shadow-xl reveal">
+            <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 border-4 border-primary-500 flex items-center justify-center animate-pulse-glow">
+                <span class="text-4xl font-bold text-yellow-400">M</span>
+            </div>
+            <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold tracking-widest uppercase mb-2">Created By</p>
+            <h3 class="text-3xl font-bold mb-2">Menmex</h3>
+            <p class="text-primary-600 font-medium mb-6">Founder & Creator of Linkify</p>
+            <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-6">Linkify was founded and created by Menmex, a visionary entrepreneur passionate about building meaningful connections through technology. This platform is designed to bring people together safely, respectfully, and authentically.</p>
+            <p class="text-xl italic text-gray-500 dark:text-gray-400">Menmex <i class="fas fa-heart text-primary-500"></i></p>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 pt-16 pb-8 px-4">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+            <div class="lg:col-span-1">
+                <div class="flex items-center space-x-2 mb-4">
+                    <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center"><i class="fas fa-link text-white text-lg"></i></div>
+                    <span class="text-2xl font-bold">Linkify</span>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 mb-6">Connect Anonymously. Meet Authentically. The future of meaningful online connections.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="social-icon w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-primary-900/30"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-primary-900/30"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-primary-900/30"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-icon w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-primary-900/30"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-4">Product</h4>
+                <ul class="space-y-3">
+                    <li><a href="#features" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Features</a></li>
+                    <li><a href="#how-it-works" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">How It Works</a></li>
+                    <li><a href="#safety" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Safety</a></li>
+                    <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Premium</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-4">Company</h4>
+                <ul class="space-y-3">
+                    <li><a href="#vision" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">About</a></li>
+                    <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Careers</a></li>
+                    <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Blog</a></li>
+                    <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-4">Legal</h4>
+                <ul class="space-y-3">
+                    <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Privacy Policy</a></li>
+                    <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Terms of Service</a></li>
+                    <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-200 dark:border-gray-800 pt-8 text-center">
+            <p class="text-gray-500 dark:text-gray-500">Linkify by Menmex. All rights reserved. Built with <i class="fas fa-heart text-primary-500"></i> for real connections.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Sign Up Modal -->
+<div id="signup-modal" class="fixed inset-0 z-[60] hidden">
+    <div class="modal-overlay absolute inset-0" onclick="closeSignupModal()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 w-full max-w-md shadow-2xl relative" style="animation: fadeIn 0.4s ease-out">
+            <button onclick="closeSignupModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"><i class="fas fa-times text-xl"></i></button>
+            <h2 class="text-2xl font-bold mb-1">Join Linkify</h2>
+            <p class="text-gray-600 dark:text-gray-400 mb-6">Start connecting anonymously today.</p>
+            <form onsubmit="handleSignup(event)" class="space-y-4">
+                <div><label class="block text-sm font-medium mb-2">Email</label><input type="email" placeholder="you@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
+                <div><label class="block text-sm font-medium mb-2">Username</label><input type="text" placeholder="Choose a username" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
+                <div><label class="block text-sm font-medium mb-2">Password</label><input type="password" placeholder="Create a password" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
+                <div><label class="block text-sm font-medium mb-2">Confirm Password</label><input type="password" placeholder="Confirm your password" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
+                <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl font-semibold transition-all hover:shadow-lg hover:shadow-primary-500/30 btn-shine flex items-center justify-center space-x-2"><span>Create Account</span><i class="fas fa-arrow-right"></i></button>
+            </form>
+            <p class="text-center mt-4 text-gray-600 dark:text-gray-400">Already have an account? <button onclick="switchToLogin()" class="text-primary-600 font-medium hover:underline">Log In</button></p>
+        </div>
+    </div>
+</div>
+
+<!-- Log In Modal -->
+<div id="login-modal" class="fixed inset-0 z-[60] hidden">
+    <div class="modal-overlay absolute inset-0" onclick="closeLoginModal()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 w-full max-w-md shadow-2xl relative" style="animation: fadeIn 0.4s ease-out">
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"><i class="fas fa-times text-xl"></i></button>
+            <h2 class="text-2xl font-bold mb-1">Welcome Back</h2>
+            <p class="text-gray-600 dark:text-gray-400 mb-6">Log in to continue your journey.</p>
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div><label class="block text-sm font-medium mb-2">Email</label><input type="email" placeholder="you@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
+                <div><label class="block text-sm font-medium mb-2">Password</label><input type="password" placeholder="Enter your password" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
+                <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl font-semibold transition-all hover:shadow-lg hover:shadow-primary-500/30 btn-shine flex items-center justify-center space-x-2"><span>Log In</span><i class="fas fa-arrow-right"></i></button>
+            </form>
+            <p class="text-center mt-4 text-gray-600 dark:text-gray-400">Don't have an account? <button onclick="switchToSignup()" class="text-primary-600 font-medium hover:underline">Sign Up</button></p>
+        </div>
+    </div>
+</div>
+
+<!-- Theme Modal -->
+<div id="theme-modal" class="fixed inset-0 z-[60] hidden">
+    <div class="modal-overlay absolute inset-0" onclick="closeThemeModal()"></div>
+    <div class="absolute inset-0 flex items-start justify-center pt-24 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl relative border border-gray-200 dark:border-gray-700" style="animation: fadeIn 0.4s ease-out">
+            <button onclick="closeThemeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"><i class="fas fa-times"></i></button>
+            <h3 class="text-lg font-bold mb-1">Choose your theme</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">You can switch between light and dark mode anytime.</p>
+            <div class="space-y-3">
+                <button onclick="setTheme('light')" id="theme-light-btn" class="w-full flex items-center space-x-3 p-4 rounded-xl border-2 border-primary-500 bg-primary-50 dark:bg-primary-900/20 transition-all">
+                    <i class="fas fa-sun text-gray-700 dark:text-gray-300"></i><span class="flex-1 text-left font-medium">Light Mode</span><i class="fas fa-check text-primary-600"></i>
+                </button>
+                <button onclick="setTheme('dark')" id="theme-dark-btn" class="w-full flex items-center space-x-3 p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all">
+                    <i class="fas fa-moon text-gray-700 dark:text-gray-300"></i><span class="flex-1 text-left font-medium">Dark Mode</span><i class="fas fa-check text-primary-600 hidden"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="fixed bottom-4 right-4 z-[70] hidden">
+    <div class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-3 rounded-xl shadow-lg flex items-center space-x-3" style="animation: fadeIn 0.4s ease-out">
+        <i class="fas fa-check-circle text-green-400 dark:text-green-600"></i>
+        <span id="toast-message">Success!</span>
+    </div>
+</div>
+
+<script>
+// ==================== THEME MANAGEMENT ====================
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+}
+
+function setTheme(theme) {
+    const html = document.documentElement;
+    const themeIcon = document.getElementById('theme-icon');
+    const themeText = document.getElementById('theme-text');
+    const lightBtn = document.getElementById('theme-light-btn');
+    const darkBtn = document.getElementById('theme-dark-btn');
+
+    if (theme === 'dark') {
+        html.classList.add('dark');
+        themeIcon.className = 'fas fa-moon text-gray-400';
+        themeText.textContent = 'Dark';
+        if (darkBtn) {
+            darkBtn.classList.add('border-primary-500', 'bg-primary-50', 'dark:bg-primary-900/20');
+            darkBtn.classList.remove('border-gray-200', 'dark:border-gray-700');
+            darkBtn.querySelector('.fa-check').classList.remove('hidden');
+        }
+        if (lightBtn) {
+            lightBtn.classList.remove('border-primary-500', 'bg-primary-50', 'dark:bg-primary-900/20');
+            lightBtn.classList.add('border-gray-200', 'dark:border-gray-700');
+            lightBtn.querySelector('.fa-check').classList.add('hidden');
+        }
+    } else {
+        html.classList.remove('dark');
+        themeIcon.className = 'fas fa-sun text-gray-600';
+        themeText.textContent = 'Light';
+        if (lightBtn) {
+            lightBtn.classList.add('border-primary-500', 'bg-primary-50', 'dark:bg-primary-900/20');
+            lightBtn.classList.remove('border-gray-200', 'dark:border-gray-700');
+            lightBtn.querySelector('.fa-check').classList.remove('hidden');
+        }
+        if (darkBtn) {
+            darkBtn.classList.remove('border-primary-500', 'bg-primary-50', 'dark:bg-primary-900/20');
+            darkBtn.classList.add('border-gray-200', 'dark:border-gray-700');
+            darkBtn.querySelector('.fa-check').classList.add('hidden');
+        }
+    }
+    localStorage.setItem('theme', theme);
+}
+
+// ==================== MODAL FUNCTIONS ====================
+function openSignupModal() { document.getElementById('signup-modal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+function closeSignupModal() { document.getElementById('signup-modal').classList.add('hidden'); document.body.style.overflow = ''; }
+function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); document.body.style.overflow = ''; }
+function openThemeModal() { document.getElementById('theme-modal').classList.remove('hidden'); }
+function closeThemeModal() { document.getElementById('theme-modal').classList.add('hidden'); }
+function switchToLogin() { closeSignupModal(); setTimeout(openLoginModal, 300); }
+function switchToSignup() { closeLoginModal(); setTimeout(openSignupModal, 300); }
+
+// ==================== FORM HANDLERS ====================
+function handleSignup(e) { e.preventDefault(); showToast('Account created successfully! Welcome to Linkify.'); closeSignupModal(); }
+function handleLogin(e) { e.preventDefault(); showToast('Welcome back! You are now logged in.'); closeLoginModal(); }
+
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-message').textContent = message;
+    toast.classList.remove('hidden');
+    setTimeout(() => { toast.classList.add('hidden'); }, 3000);
+}
+
+// ==================== MOBILE MENU ====================
+function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
+
+// ==================== ARCHITECTURE TABS ====================
+function showArchTab(tabName) {
+    document.querySelectorAll('.arch-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('arch-' + tabName).classList.remove('hidden');
+    document.getElementById('tab-' + tabName).classList.add('active');
+}
+
+// ==================== COLLAPSIBLE SECTIONS ====================
+function toggleCollapse(id) {
+    const content = document.getElementById(id);
+    const icon = document.getElementById('icon-' + id);
+    content.classList.toggle('open');
+    if (content.classList.contains('open')) {
+        icon.style.transform = 'rotate(180deg)';
+    } else {
+        icon.style.transform = 'rotate(0deg)';
+    }
+}
+
+// ==================== MATCH SIMULATOR ====================
+function toggleInterest(chip, user) {
+    chip.classList.toggle('selected');
+    calculateMatch();
+}
+
+function calculateMatch() {
+    // Get values
+    const ageA = document.getElementById('userA-age').value;
+    const ageB = document.getElementById('userB-age').value;
+    const countryA = document.getElementById('userA-country').value;
+    const countryB = document.getElementById('userB-country').value;
+    const langA = document.getElementById('userA-lang').value;
+    const langB = document.getElementById('userB-lang').value;
+    const levelA = document.getElementById('userA-level').value;
+    const levelB = document.getElementById('userB-level').value;
+
+    // Get interests
+    const interestsA = Array.from(document.querySelectorAll('#userA-interests .interest-chip.selected')).map(el => el.textContent);
+    const interestsB = Array.from(document.querySelectorAll('#userB-interests .interest-chip.selected')).map(el => el.textContent);
+
+    // Calculate scores
+    let score = 0;
+    let interestScore = 0;
+
+    // Interest Match (max 40)
+    const commonInterests = interestsA.filter(i => interestsB.includes(i));
+    interestScore = Math.min(commonInterests.length * 10, 40);
+    score += interestScore;
+
+    // Age Compatibility (max 20)
+    let ageScore = 0;
+    if (ageA === ageB) ageScore = 20;
+    score += ageScore;
+
+    // Language Match (max 20)
+    let langScore = 0;
+    if (langA === langB) langScore = 20;
+    score += langScore;
+
+    // Location Match (max 10)
+    let locScore = 0;
+    if (countryA === countryB) locScore = 10;
+    score += locScore;
+
+    // Academic Match (max 35)
+    let acadScore = 0;
+    if (levelA === levelB) acadScore = 25;
+    else if (levelA.startsWith('100') && levelB.startsWith('100')) acadScore = 15;
+    else if ((levelA.startsWith('JSS') && levelB.startsWith('JSS')) || 
+             (levelA.startsWith('SS') && levelB.startsWith('SS')) ||
+             (levelA.startsWith('ND') && levelB.startsWith('ND')) ||
+             (levelA.startsWith('HND') && levelB.startsWith('HND'))) acadScore = 10;
+    score += acadScore;
+
+    // Update UI
+    const percentage = Math.min(score, 100);
+    document.getElementById('match-percentage').textContent = percentage + '%';
+
+    // Update bars
+    document.getElementById('score-interest').textContent = interestScore + ' pts';
+    document.getElementById('bar-interest').style.width = (interestScore / 40 * 100) + '%';
+
+    document.getElementById('score-age').textContent = ageScore + ' pts';
+    document.getElementById('bar-age').style.width = (ageScore / 20 * 100) + '%';
+
+    document.getElementById('score-lang').textContent = langScore + ' pts';
+    document.getElementById('bar-lang').style.width = (langScore / 20 * 100) + '%';
+
+    document.getElementById('score-location').textContent = locScore + ' pts';
+    document.getElementById('bar-location').style.width = (locScore / 10 * 100) + '%';
+
+    document.getElementById('score-academic').textContent = acadScore + ' pts';
+    document.getElementById('bar-academic').style.width = (acadScore / 35 * 100) + '%';
+
+    // Update label and recommendation
+    const labelEl = document.getElementById('match-label');
+    const recEl = document.getElementById('match-recommendation');
+
+    if (percentage <= 40) {
+        labelEl.textContent = 'Low Match';
+        labelEl.className = 'text-sm font-medium text-red-600';
+        recEl.className = 'mt-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-center';
+        recEl.innerHTML = '<i class="fas fa-times-circle text-red-600 mb-2"></i><p class="text-sm text-red-800 dark:text-red-300">Few shared interests or incompatible preferences. Consider adjusting your matching criteria.</p>';
+    } else if (percentage <= 70) {
+        labelEl.textContent = 'Moderate Match';
+        labelEl.className = 'text-sm font-medium text-yellow-600';
+        recEl.className = 'mt-8 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl text-center';
+        recEl.innerHTML = '<i class="fas fa-info-circle text-yellow-600 mb-2"></i><p class="text-sm text-yellow-800 dark:text-yellow-300">Some common ground worth exploring. Try starting a conversation about your shared interests!</p>';
+    } else {
+        labelEl.textContent = 'High Match';
+        labelEl.className = 'text-sm font-medium text-green-600';
+        recEl.className = 'mt-8 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl text-center';
+        recEl.innerHTML = '<i class="fas fa-check-circle text-green-600 mb-2"></i><p class="text-sm text-green-800 dark:text-green-300">Strong compatibility! You share multiple interests and preferences. Great connection potential!</p>';
+    }
+}
+
+// ==================== SCROLL ANIMATIONS ====================
+function initScrollAnimations() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
+// ==================== SMOOTH SCROLL ====================
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); document.getElementById('mobile-menu').classList.add('hidden'); }
+    });
+});
+
+// ==================== KEYBOARD SHORTCUTS ====================
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { closeSignupModal(); closeLoginModal(); closeThemeModal(); }
+});
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    initScrollAnimations();
+    calculateMatch(); // Initialize simulator with default values
+});
+</script>
+</body>
+</html>
