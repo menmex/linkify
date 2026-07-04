@@ -35,7 +35,6 @@
     async function checkAuth() {
         if (!authToken) return false;
         try {
-            // Token validation would happen server-side on each request
             return true;
         } catch {
             authToken = null;
@@ -47,7 +46,6 @@
     // Update UI based on auth state
     async function updateAuthUI() {
         const isLoggedIn = await checkAuth();
-        // We can add UI updates here later (show username, hide login button, etc.)
     }
         tailwind.config = {
             darkMode: 'class',
@@ -107,7 +105,6 @@
         .db-table-row:hover { background: rgba(139,92,246,0.05); }
         .match-score-bar { transition: width 1s ease-out; }
     </style>
-<base target="_blank">
 </head>
 <body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
 
@@ -305,7 +302,7 @@
     </div>
 </section>
 
-<!-- ==================== PLATFORM ARCHITECTURE SECTION ==================== -->
+<!-- Platform Architecture Section -->
 <section id="data-structure" class="py-20 px-4 bg-gradient-to-b from-gray-100 to-white dark:from-gray-800/50 dark:to-gray-900">
     <div class="max-w-7xl mx-auto">
         <div class="text-center mb-16 reveal">
@@ -855,7 +852,7 @@
     </div>
 </section>
 
-<!-- ==================== MATCH SIMULATOR SECTION ==================== -->
+<!-- Match Simulator Section -->
 <section id="match-simulator" class="py-20 px-4 bg-gray-100 dark:bg-gray-800/50">
     <div class="max-w-6xl mx-auto">
         <div class="text-center mb-16 reveal">
@@ -1104,10 +1101,10 @@
             <h2 class="text-2xl font-bold mb-1">Join Linkify</h2>
             <p class="text-gray-600 dark:text-gray-400 mb-6">Start connecting anonymously today.</p>
             <form onsubmit="handleSignup(event)" class="space-y-4">
-                <div><label class="block text-sm font-medium mb-2">Email</label><input type="email" placeholder="you@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
-                <div><label class="block text-sm font-medium mb-2">Username</label><input type="text" placeholder="Choose a username" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
-                <div><label class="block text-sm font-medium mb-2">Password</label><input type="password" placeholder="Create a password" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
-                <div><label class="block text-sm font-medium mb-2">Confirm Password</label><input type="password" placeholder="Confirm your password" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
+                <div><label class="block text-sm font-medium mb-2">Email</label><input type="email" id="signup-email" placeholder="you@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
+                <div><label class="block text-sm font-medium mb-2">Username</label><input type="text" id="signup-username" placeholder="Choose a username" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
+                <div><label class="block text-sm font-medium mb-2">Password</label><input type="password" id="signup-password" placeholder="Create a password" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
+                <div><label class="block text-sm font-medium mb-2">Confirm Password</label><input type="password" id="signup-confirm" placeholder="Confirm your password" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
                 <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl font-semibold transition-all hover:shadow-lg hover:shadow-primary-500/30 btn-shine flex items-center justify-center space-x-2"><span>Create Account</span><i class="fas fa-arrow-right"></i></button>
             </form>
             <p class="text-center mt-4 text-gray-600 dark:text-gray-400">Already have an account? <button onclick="switchToLogin()" class="text-primary-600 font-medium hover:underline">Log In</button></p>
@@ -1124,8 +1121,8 @@
             <h2 class="text-2xl font-bold mb-1">Welcome Back</h2>
             <p class="text-gray-600 dark:text-gray-400 mb-6">Log in to continue your journey.</p>
             <form onsubmit="handleLogin(event)" class="space-y-4">
-                <div><label class="block text-sm font-medium mb-2">Email</label><input type="email" placeholder="you@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
-                <div><label class="block text-sm font-medium mb-2">Password</label><input type="password" placeholder="Enter your password" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
+                <div><label class="block text-sm font-medium mb-2">Email</label><input type="email" id="login-email" placeholder="you@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
+                <div><label class="block text-sm font-medium mb-2">Password</label><input type="password" id="login-password" placeholder="Enter your password" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-white" required></div>
                 <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl font-semibold transition-all hover:shadow-lg hover:shadow-primary-500/30 btn-shine flex items-center justify-center space-x-2"><span>Log In</span><i class="fas fa-arrow-right"></i></button>
             </form>
             <p class="text-center mt-4 text-gray-600 dark:text-gray-400">Don't have an account? <button onclick="switchToSignup()" class="text-primary-600 font-medium hover:underline">Sign Up</button></p>
@@ -1133,249 +1130,218 @@
     </div>
 </div>
 
-<!-- Theme Modal -->
-<div id="theme-modal" class="fixed inset-0 z-[60] hidden">
-    <div class="modal-overlay absolute inset-0" onclick="closeThemeModal()"></div>
-    <div class="absolute inset-0 flex items-start justify-center pt-24 p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl relative border border-gray-200 dark:border-gray-700" style="animation: fadeIn 0.4s ease-out">
-            <button onclick="closeThemeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"><i class="fas fa-times"></i></button>
-            <h3 class="text-lg font-bold mb-1">Choose your theme</h3>
-            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">You can switch between light and dark mode anytime.</p>
-            <div class="space-y-3">
-                <button onclick="setTheme('light')" id="theme-light-btn" class="w-full flex items-center space-x-3 p-4 rounded-xl border-2 border-primary-500 bg-primary-50 dark:bg-primary-900/20 transition-all">
-                    <i class="fas fa-sun text-gray-700 dark:text-gray-300"></i><span class="flex-1 text-left font-medium">Light Mode</span><i class="fas fa-check text-primary-600"></i>
-                </button>
-                <button onclick="setTheme('dark')" id="theme-dark-btn" class="w-full flex items-center space-x-3 p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all">
-                    <i class="fas fa-moon text-gray-700 dark:text-gray-300"></i><span class="flex-1 text-left font-medium">Dark Mode</span><i class="fas fa-check text-primary-600 hidden"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Toast Notification -->
-<div id="toast" class="fixed bottom-4 right-4 z-[70] hidden">
-    <div class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-3 rounded-xl shadow-lg flex items-center space-x-3" style="animation: fadeIn 0.4s ease-out">
-        <i class="fas fa-check-circle text-green-400 dark:text-green-600"></i>
-        <span id="toast-message">Success!</span>
-    </div>
-</div>
-
+<!-- Core System Scripts -->
 <script>
-// ==================== THEME MANAGEMENT ====================
-function initTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    setTheme(savedTheme);
-}
-
-function setTheme(theme) {
-    const html = document.documentElement;
-    const themeIcon = document.getElementById('theme-icon');
-    const themeText = document.getElementById('theme-text');
-    const lightBtn = document.getElementById('theme-light-btn');
-    const darkBtn = document.getElementById('theme-dark-btn');
-
-    if (theme === 'dark') {
-        html.classList.add('dark');
-        themeIcon.className = 'fas fa-moon text-gray-400';
-        themeText.textContent = 'Dark';
-        if (darkBtn) {
-            darkBtn.classList.add('border-primary-500', 'bg-primary-50', 'dark:bg-primary-900/20');
-            darkBtn.classList.remove('border-gray-200', 'dark:border-gray-700');
-            darkBtn.querySelector('.fa-check').classList.remove('hidden');
-        }
-        if (lightBtn) {
-            lightBtn.classList.remove('border-primary-500', 'bg-primary-50', 'dark:bg-primary-900/20');
-            lightBtn.classList.add('border-gray-200', 'dark:border-gray-700');
-            lightBtn.querySelector('.fa-check').classList.add('hidden');
-        }
-    } else {
-        html.classList.remove('dark');
-        themeIcon.className = 'fas fa-sun text-gray-600';
-        themeText.textContent = 'Light';
-        if (lightBtn) {
-            lightBtn.classList.add('border-primary-500', 'bg-primary-50', 'dark:bg-primary-900/20');
-            lightBtn.classList.remove('border-gray-200', 'dark:border-gray-700');
-            lightBtn.querySelector('.fa-check').classList.remove('hidden');
-        }
-        if (darkBtn) {
-            darkBtn.classList.remove('border-primary-500', 'bg-primary-50', 'dark:bg-primary-900/20');
-            darkBtn.classList.add('border-gray-200', 'dark:border-gray-700');
-            darkBtn.querySelector('.fa-check').classList.add('hidden');
-        }
+    // Navigation and Menu Utilities
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
     }
-    localStorage.setItem('theme', theme);
-}
 
-// ==================== MODAL FUNCTIONS ====================
-function openSignupModal() { document.getElementById('signup-modal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
-function closeSignupModal() { document.getElementById('signup-modal').classList.add('hidden'); document.body.style.overflow = ''; }
-function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
-function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); document.body.style.overflow = ''; }
-function openThemeModal() { document.getElementById('theme-modal').classList.remove('hidden'); }
-function closeThemeModal() { document.getElementById('theme-modal').classList.add('hidden'); }
-function switchToLogin() { closeSignupModal(); setTimeout(openLoginModal, 300); }
-function switchToSignup() { closeLoginModal(); setTimeout(openSignupModal, 300); }
-
-// ==================== FORM HANDLERS ====================
-function handleSignup(e) { e.preventDefault(); showToast('Account created successfully! Welcome to Linkify.'); closeSignupModal(); }
-function handleLogin(e) { e.preventDefault(); showToast('Welcome back! You are now logged in.'); closeLoginModal(); }
-
-function showToast(message) {
-    const toast = document.getElementById('toast');
-    document.getElementById('toast-message').textContent = message;
-    toast.classList.remove('hidden');
-    setTimeout(() => { toast.classList.add('hidden'); }, 3000);
-}
-
-// ==================== MOBILE MENU ====================
-function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
-
-// ==================== ARCHITECTURE TABS ====================
-function showArchTab(tabName) {
-    document.querySelectorAll('.arch-content').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-    document.getElementById('arch-' + tabName).classList.remove('hidden');
-    document.getElementById('tab-' + tabName).classList.add('active');
-}
-
-// ==================== COLLAPSIBLE SECTIONS ====================
-function toggleCollapse(id) {
-    const content = document.getElementById(id);
-    const icon = document.getElementById('icon-' + id);
-    content.classList.toggle('open');
-    if (content.classList.contains('open')) {
-        icon.style.transform = 'rotate(180deg)';
-    } else {
-        icon.style.transform = 'rotate(0deg)';
+    // Modal Control Functions
+    function openSignupModal() {
+        document.getElementById('signup-modal').classList.remove('hidden');
     }
-}
-
-// ==================== MATCH SIMULATOR ====================
-function toggleInterest(chip, user) {
-    chip.classList.toggle('selected');
-    calculateMatch();
-}
-
-function calculateMatch() {
-    // Get values
-    const ageA = document.getElementById('userA-age').value;
-    const ageB = document.getElementById('userB-age').value;
-    const countryA = document.getElementById('userA-country').value;
-    const countryB = document.getElementById('userB-country').value;
-    const langA = document.getElementById('userA-lang').value;
-    const langB = document.getElementById('userB-lang').value;
-    const levelA = document.getElementById('userA-level').value;
-    const levelB = document.getElementById('userB-level').value;
-
-    // Get interests
-    const interestsA = Array.from(document.querySelectorAll('#userA-interests .interest-chip.selected')).map(el => el.textContent);
-    const interestsB = Array.from(document.querySelectorAll('#userB-interests .interest-chip.selected')).map(el => el.textContent);
-
-    // Calculate scores
-    let score = 0;
-    let interestScore = 0;
-
-    // Interest Match (max 40)
-    const commonInterests = interestsA.filter(i => interestsB.includes(i));
-    interestScore = Math.min(commonInterests.length * 10, 40);
-    score += interestScore;
-
-    // Age Compatibility (max 20)
-    let ageScore = 0;
-    if (ageA === ageB) ageScore = 20;
-    score += ageScore;
-
-    // Language Match (max 20)
-    let langScore = 0;
-    if (langA === langB) langScore = 20;
-    score += langScore;
-
-    // Location Match (max 10)
-    let locScore = 0;
-    if (countryA === countryB) locScore = 10;
-    score += locScore;
-
-    // Academic Match (max 35)
-    let acadScore = 0;
-    if (levelA === levelB) acadScore = 25;
-    else if (levelA.startsWith('100') && levelB.startsWith('100')) acadScore = 15;
-    else if ((levelA.startsWith('JSS') && levelB.startsWith('JSS')) || 
-             (levelA.startsWith('SS') && levelB.startsWith('SS')) ||
-             (levelA.startsWith('ND') && levelB.startsWith('ND')) ||
-             (levelA.startsWith('HND') && levelB.startsWith('HND'))) acadScore = 10;
-    score += acadScore;
-
-    // Update UI
-    const percentage = Math.min(score, 100);
-    document.getElementById('match-percentage').textContent = percentage + '%';
-
-    // Update bars
-    document.getElementById('score-interest').textContent = interestScore + ' pts';
-    document.getElementById('bar-interest').style.width = (interestScore / 40 * 100) + '%';
-
-    document.getElementById('score-age').textContent = ageScore + ' pts';
-    document.getElementById('bar-age').style.width = (ageScore / 20 * 100) + '%';
-
-    document.getElementById('score-lang').textContent = langScore + ' pts';
-    document.getElementById('bar-lang').style.width = (langScore / 20 * 100) + '%';
-
-    document.getElementById('score-location').textContent = locScore + ' pts';
-    document.getElementById('bar-location').style.width = (locScore / 10 * 100) + '%';
-
-    document.getElementById('score-academic').textContent = acadScore + ' pts';
-    document.getElementById('bar-academic').style.width = (acadScore / 35 * 100) + '%';
-
-    // Update label and recommendation
-    const labelEl = document.getElementById('match-label');
-    const recEl = document.getElementById('match-recommendation');
-
-    if (percentage <= 40) {
-        labelEl.textContent = 'Low Match';
-        labelEl.className = 'text-sm font-medium text-red-600';
-        recEl.className = 'mt-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-center';
-        recEl.innerHTML = '<i class="fas fa-times-circle text-red-600 mb-2"></i><p class="text-sm text-red-800 dark:text-red-300">Few shared interests or incompatible preferences. Consider adjusting your matching criteria.</p>';
-    } else if (percentage <= 70) {
-        labelEl.textContent = 'Moderate Match';
-        labelEl.className = 'text-sm font-medium text-yellow-600';
-        recEl.className = 'mt-8 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl text-center';
-        recEl.innerHTML = '<i class="fas fa-info-circle text-yellow-600 mb-2"></i><p class="text-sm text-yellow-800 dark:text-yellow-300">Some common ground worth exploring. Try starting a conversation about your shared interests!</p>';
-    } else {
-        labelEl.textContent = 'High Match';
-        labelEl.className = 'text-sm font-medium text-green-600';
-        recEl.className = 'mt-8 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl text-center';
-        recEl.innerHTML = '<i class="fas fa-check-circle text-green-600 mb-2"></i><p class="text-sm text-green-800 dark:text-green-300">Strong compatibility! You share multiple interests and preferences. Great connection potential!</p>';
+    function closeSignupModal() {
+        document.getElementById('signup-modal').classList.add('hidden');
     }
-}
+    function openLoginModal() {
+        document.getElementById('login-modal').classList.remove('hidden');
+    }
+    function closeLoginModal() {
+        document.getElementById('login-modal').classList.add('hidden');
+    }
+    function switchToLogin() {
+        closeSignupModal();
+        openLoginModal();
+    }
+    function switchToSignup() {
+        closeLoginModal();
+        openSignupModal();
+    }
 
-// ==================== SCROLL ANIMATIONS ====================
-function initScrollAnimations() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-}
-
-// ==================== SMOOTH SCROLL ====================
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
+    // Backend Form Submissions Integration
+    async function handleSignup(e) {
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); document.getElementById('mobile-menu').classList.add('hidden'); }
+        const email = document.getElementById('signup-email').value;
+        const username = document.getElementById('signup-username').value;
+        const password = document.getElementById('signup-password').value;
+        const confirmPassword = document.getElementById('signup-confirm').value;
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match!");
+            return;
+        }
+
+        try {
+            const data = await apiRequest('/auth/signup', {
+                method: 'POST',
+                body: { email, username, password }
+            });
+            if(data.token) {
+                localStorage.setItem('authToken', data.token);
+                authToken = data.token;
+                alert('Registration successful!');
+                closeSignupModal();
+                updateAuthUI();
+            }
+        } catch (error) {
+            alert('Signup Error: ' + error.message);
+        }
+    }
+
+    async function handleLogin(e) {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+
+        try {
+            const data = await apiRequest('/auth/login', {
+                method: 'POST',
+                body: { email, password }
+            });
+            if(data.token) {
+                localStorage.setItem('authToken', data.token);
+                authToken = data.token;
+                alert('Logged in successfully!');
+                closeLoginModal();
+                updateAuthUI();
+            }
+        } catch (error) {
+            alert('Login Error: ' + error.message);
+        }
+    }
+
+    // Theme Switcher Control (Dark / Light Mode Toggle)
+    function openThemeModal() {
+        const html = document.documentElement;
+        const icon = document.getElementById('theme-icon');
+        const text = document.getElementById('theme-text');
+        
+        if (html.classList.contains('dark')) {
+            html.classList.remove('dark');
+            icon.className = 'fas fa-sun text-gray-600';
+            text.innerText = 'Light';
+        } else {
+            html.classList.add('dark');
+            icon.className = 'fas fa-moon text-primary-400';
+            text.innerText = 'Dark';
+        }
+    }
+
+    // Platform Architecture Tab Switcher
+    function showArchTab(tabName) {
+        document.querySelectorAll('.arch-content').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        
+        document.getElementById(`arch-${tabName}`).classList.remove('hidden');
+        document.getElementById(`tab-${tabName}`).classList.add('active');
+    }
+
+    // Accordion / Collapse UI Toggler
+    function toggleCollapse(id) {
+        const content = document.getElementById(id);
+        const icon = document.getElementById(`icon-${id}`);
+        content.classList.toggle('open');
+        if(content.classList.contains('open')) {
+            icon.style.transform = 'rotate(0deg)';
+        } else {
+            icon.style.transform = 'rotate(-90deg)';
+        }
+    }
+
+    // Interactive Demo Matchmaking Simulator Logic Engine
+    function toggleInterest(element, userGroup) {
+        element.classList.toggle('selected');
+        calculateMatch();
+    }
+
+    function calculateMatch() {
+        let score = 0;
+
+        // 1. Age Rule Engine (+20 pts max)
+        const ageA = document.getElementById('userA-age').value;
+        const ageB = document.getElementById('userB-age').value;
+        let scoreAge = (ageA === ageB) ? 20 : 0;
+        score += scoreAge;
+
+        // 2. Language Rule Engine (+20 pts max)
+        const langA = document.getElementById('userA-lang').value;
+        const langB = document.getElementById('userB-lang').value;
+        let scoreLang = (langA === langB) ? 20 : 0;
+        score += scoreLang;
+
+        // 3. Location Rule Engine (+10 pts max)
+        const countryA = document.getElementById('userA-country').value;
+        const countryB = document.getElementById('userB-country').value;
+        let scoreLocation = (countryA === countryB) ? 10 : 0;
+        score += scoreLocation;
+
+        // 4. Academic Level Rule Engine (+15 bonus pts up to 25 absolute max capacity)
+        const levelA = document.getElementById('userA-level').value;
+        const levelB = document.getElementById('userB-level').value;
+        let scoreAcademic = (levelA === levelB) ? 25 : 5;
+        score += scoreAcademic;
+
+        // 5. Shared Multi-Interests Intersection Calculator Engine (+10 pts each up to 40 max)
+        const interestsA = Array.from(document.querySelectorAll('#userA-interests .interest-chip.selected')).map(el => el.innerText);
+        const interestsB = Array.from(document.querySelectorAll('#userB-interests .interest-chip.selected')).map(el => el.innerText);
+        const sharedInterests = interestsA.filter(interest => interestsB.includes(interest));
+        let scoreInterest = Math.min(sharedInterests.length * 10, 40);
+        score += scoreInterest;
+
+        // Clamp standard logic to peak dynamic limits
+        if (score > 100) score = 100;
+
+        // Render Dynamic Statistics to HTML DOM Nodes
+        document.getElementById('match-percentage').innerText = `${score}%`;
+        document.getElementById('score-interest').innerText = `${scoreInterest} pts`;
+        document.getElementById('bar-interest').style.width = `${(scoreInterest/40)*100}%`;
+        document.getElementById('score-age').innerText = `${scoreAge} pts`;
+        document.getElementById('bar-age').style.width = `${(scoreAge/20)*100}%`;
+        document.getElementById('score-lang').innerText = `${scoreLang} pts`;
+        document.getElementById('bar-lang').style.width = `${(scoreLang/20)*100}%`;
+        document.getElementById('score-location').innerText = `${scoreLocation} pts`;
+        document.getElementById('bar-location').style.width = `${(scoreLocation/10)*100}%`;
+        document.getElementById('score-academic').innerText = `${scoreAcademic} pts`;
+        document.getElementById('bar-academic').style.width = `${(scoreAcademic/25)*100}%`;
+
+        // Update Global Recommendations
+        const labelEl = document.getElementById('match-label');
+        const recEl = document.getElementById('match-recommendation');
+        if(score <= 40) {
+            labelEl.innerText = "Low Match";
+            labelEl.className = "text-sm font-medium text-red-600";
+            recEl.className = "mt-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-center text-red-800 dark:text-red-300";
+            recEl.innerHTML = '<i class="fas fa-exclamation-triangle mb-2"></i><p>Few shared fields found. Try adapting interest arrays to check alignment values.</p>';
+        } else if(score <= 70) {
+            labelEl.innerText = "Moderate Match";
+            labelEl.className = "text-sm font-medium text-yellow-600";
+            recEl.className = "mt-8 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl text-center text-yellow-800 dark:text-yellow-300";
+            recEl.innerHTML = '<i class="fas fa-info-circle mb-2"></i><p>Some common ground worth exploring. Try starting a conversation about your shared interests!</p>';
+        } else {
+            labelEl.innerText = "High Match";
+            labelEl.className = "text-sm font-medium text-green-600";
+            recEl.className = "mt-8 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl text-center text-green-800 dark:text-green-300";
+            recEl.innerHTML = '<i class="fas fa-fire mb-2"></i><p>Strong compatibility matrix matched! Phenomenal link connection possibilities here.</p>';
+        }
+    }
+
+    // Scroll Animation Reveals
+    window.addEventListener('scroll', () => {
+        document.querySelectorAll('.reveal').forEach(el => {
+            const windowHeight = window.innerHeight;
+            const elementTop = el.getBoundingClientRect().top;
+            if (elementTop < windowHeight - 50) {
+                el.classList.add('active');
+            }
+        });
     });
-});
 
-// ==================== KEYBOARD SHORTCUTS ====================
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { closeSignupModal(); closeLoginModal(); closeThemeModal(); }
-});
-
-// ==================== INIT ====================
-document.addEventListener('DOMContentLoaded', () => {
-    initTheme();
-    initScrollAnimations();
-    calculateMatch(); // Initialize simulator with default values
-});
+    // Initialize logic properties automatically on window ready load state
+    window.onload = () => {
+        calculateMatch();
+    };
 </script>
 </body>
 </html>
